@@ -1,0 +1,23 @@
+# 공통 설정은 여기서
+server:
+  servlet:
+    encoding:
+      charset: utf-8
+      force: true
+
+logging:
+  level:
+    com.bom.com.bom.newsfeed: debug
+    org.springframework.web.servlet: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    org.springframework.security: trace
+
+spring:
+  profiles:
+    include:
+      - properties
+    default: dev
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB

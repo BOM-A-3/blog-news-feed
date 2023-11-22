@@ -1,6 +1,7 @@
 package com.bom.newsfeed.domain.member.entity;
 
 import com.bom.newsfeed.domain.member.constant.MemberRole;
+import com.bom.newsfeed.domain.member.dto.request.UpdateProfileRequest;
 import com.bom.newsfeed.global.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -53,5 +54,11 @@ public class Member extends BaseEntity {
 
 	public static Member of(String username, String password, String nickname) {
 		return new Member(username, password, nickname, MemberRole.USER);
+	}
+
+	public void updateProfile(UpdateProfileRequest request) {
+		this.password = request.getChangePassword();
+		this.nickname = request.getNickname();
+		this.introduce = request.getIntroduce();
 	}
 }

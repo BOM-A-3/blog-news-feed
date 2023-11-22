@@ -21,6 +21,7 @@ import com.bom.newsfeed.global.annotation.CurrentMember;
 import com.bom.newsfeed.global.common.dto.ErrorResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -70,9 +71,31 @@ public class MemberController {
 	})
 	@GetMapping("/nickname/verify")
 	public ResponseEntity<Object> verifyNickname(
+		@Parameter(name = "nickname", description = "닉네임")
 		@RequestParam("nickname") String nickname
 	) {
 		memberService.verifyNickname(nickname);
+		return ResponseEntity.noContent().build();
+	}
+
+	@Operation(summary = "아이디 중복검사", description = "아이디 중복검사 API")
+	@ApiResponses(value = {
+		@ApiResponse(
+			responseCode = "204",
+			description = "중복 없음 확인"
+		),
+		@ApiResponse(
+			responseCode = "409",
+			description = "아이디가 존재하는 경우",
+			content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+		)
+	})
+	@GetMapping("/username/verify")
+	public ResponseEntity<Object> verifyUsername(
+		@Parameter(name = "username", description = "아이디")
+		@RequestParam("username") String username
+	) {
+		memberService.verifyUsername(username);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -96,6 +119,7 @@ public class MemberController {
 	})
 	@PutMapping("/{memberId}/profile")
 	public void updateProfile (
+		@Parameter(name = "memberId", description = "회원 ID")
 		@PathVariable("memberId") Long memberId,
 		@RequestBody UpdateProfileRequest request,
 		@CurrentMember MemberDto memberDto

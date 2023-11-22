@@ -71,4 +71,11 @@ public class MemberService {
 			throw new AccessDeniedException(ACCESS_DENIED_MESSAGE);
 		}
 	}
+
+
+	public void verifyUsername(String username) {
+		if (memberRepository.existsByUsername(username)) {
+			throw new AlreadyExistMemberException();
+		}
+	}
 }

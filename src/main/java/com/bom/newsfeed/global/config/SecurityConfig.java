@@ -19,6 +19,7 @@ import com.bom.newsfeed.global.auth.UserDetailsService;
 import com.bom.newsfeed.global.filter.JwtAuthenticationFilter;
 import com.bom.newsfeed.global.filter.JwtAuthorizationFilter;
 import com.bom.newsfeed.global.security.AuthenticationEntryPointImpl;
+import com.bom.newsfeed.global.security.UserDetailsServiceImpl;
 import com.bom.newsfeed.global.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -29,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	private final JwtUtil jwtUtil;
-	private final UserDetailsService userDetailsService;
+	private final UserDetailsServiceImpl userDetailsService;
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final ObjectMapper objectMapper;
 

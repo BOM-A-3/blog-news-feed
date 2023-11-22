@@ -5,18 +5,13 @@ server:
       charset: utf-8
       force: true
 
-logging:
-  level:
-    com.bom.com.bom.newsfeed: debug
-    org.springframework.web.servlet: debug
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
-    org.springframework.security: trace
-
 spring:
   profiles:
     include:
       - properties
-    default: dev
+      - local
+    default: local
+
   servlet:
     multipart:
       max-file-size: 10MB

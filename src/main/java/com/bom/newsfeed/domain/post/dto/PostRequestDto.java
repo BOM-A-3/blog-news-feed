@@ -2,6 +2,8 @@ package com.bom.newsfeed.domain.post.dto;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.bom.newsfeed.domain.category.entity.Category;
 import com.bom.newsfeed.domain.postfile.entity.PostFile;
 
@@ -15,9 +17,7 @@ public class PostRequestDto {
 
 	private String content;
 
-	private String url;
-
-	private List<PostFile> postFile;
+	private List<MultipartFile> multipartFiles;
 
 	private Category category;
 }

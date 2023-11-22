@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.bom.newsfeed.domain.member.dto.MemberDto;
 import com.bom.newsfeed.domain.member.entity.Member;
 import com.bom.newsfeed.domain.post.dto.GetPostAllResponseDto;
 import com.bom.newsfeed.domain.post.dto.PostRequestDto;
@@ -22,8 +24,10 @@ public class PostService {
 		this.postRepository = postRepository;
 	}
 
-	public PostResponseDto createPost(PostRequestDto postRequestDto, Member member) {
+	public PostResponseDto createPost(PostRequestDto postRequestDto, MemberDto member) {
 		Post post = new Post(postRequestDto, member);
+		//파일 추가
+		//
 
 		Post savePost = postRepository.save(post);
 		return new PostResponseDto(savePost);
@@ -46,6 +50,13 @@ public class PostService {
 	}
 
 	// 게시글 업데이트
+	@Transactional
+	public PostResponseDto updatePost(Long id, Member member , PostRequestDto requestDto) throws IllegalAccessException {
+		Post post = findPost(id);
+		MatchedMember(post,member);
+		post.update(requestDto);
+		return new PostResponseDto(post);
+	}
 
 
 
@@ -56,8 +67,10 @@ public class PostService {
 
 
 
-
-
+	private void MatchedMember(Post post, Member member) throws IllegalAccessException {
+		if(!post.getMembers().getUsername().equals(member.getUsername()))
+			throw new IllegalAccessException("게시글 작성자가 아닙니다.");
+	}
 
 
 	private Post findPost(Long id) {

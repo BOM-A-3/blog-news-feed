@@ -15,12 +15,12 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.bom.newsfeed.global.auth.UserDetailsService;
 import com.bom.newsfeed.global.filter.JwtAuthenticationFilter;
 import com.bom.newsfeed.global.filter.JwtAuthorizationFilter;
 import com.bom.newsfeed.global.security.AuthenticationEntryPointImpl;
 import com.bom.newsfeed.global.security.UserDetailsServiceImpl;
 import com.bom.newsfeed.global.util.JwtUtil;
+import com.bom.newsfeed.global.util.RedisUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	private final JwtUtil jwtUtil;
+	private final RedisUtil redisUtil;
 	private final UserDetailsServiceImpl userDetailsService;
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final ObjectMapper objectMapper;
@@ -74,7 +75,7 @@ public class SecurityConfig {
 	}
 	@Bean
 	public JwtAuthorizationFilter jwtAuthorizationFilter() {
-		return new JwtAuthorizationFilter(jwtUtil, userDetailsService, objectMapper);
+		return new JwtAuthorizationFilter(jwtUtil, redisUtil, userDetailsService);
 	}
 	@Bean
 	public AuthenticationEntryPoint authenticationEntryPoint(){
@@ -82,7 +83,7 @@ public class SecurityConfig {
 	}
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-		JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, objectMapper);
+		JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, redisUtil, objectMapper);
 		filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
 		return filter;
 	}

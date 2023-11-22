@@ -16,7 +16,9 @@ import com.bom.newsfeed.global.auth.TokenDto;
 import com.bom.newsfeed.global.security.UserDetailsImpl;
 import com.bom.newsfeed.global.common.dto.ErrorResponse;
 import com.bom.newsfeed.global.common.dto.LoginRequest;
+import com.bom.newsfeed.global.security.UserDetailsServiceImpl;
 import com.bom.newsfeed.global.util.JwtUtil;
+import com.bom.newsfeed.global.util.RedisUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -30,11 +32,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = "로그인 인증")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtUtil jwtUtil;
+    private final RedisUtil redisUtil;
     private final ObjectMapper objectMapper;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, ObjectMapper objectMapper) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil,  RedisUtil redisUtil, ObjectMapper objectMapper) {
         this.jwtUtil = jwtUtil;
+        this.redisUtil = redisUtil;
         this.objectMapper = objectMapper;
+
         setFilterProcessesUrl("/api/auth/login");
     }
 
@@ -64,6 +69,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         TokenDto tokenDto = jwtUtil.createToken(username, role);
         jwtUtil.setTokenResponse(tokenDto, response);
+        redisUtil.saveKey("RefreshToken:" + username, 24 * 60, tokenDto.getRefreshToken());
     }
 
 
@@ -86,6 +92,5 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private void setResponseConfig(HttpServletResponse response) {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("utf-8");
-        response.setStatus(UNAUTHORIZED_MEMBER.getHttpStatus().value());
     }
 }

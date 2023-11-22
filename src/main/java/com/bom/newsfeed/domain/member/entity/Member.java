@@ -52,8 +52,19 @@ public class Member extends BaseEntity {
 		this.modifiedBy = username;
 	}
 
+	public Member(Long id, String username, String password, String nickname, MemberRole role) {
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.nickname = nickname;
+		this.role = role;
+	}
+
 	public static Member of(String username, String password, String nickname) {
 		return new Member(username, password, nickname, MemberRole.USER);
+	}
+	public static Member of(Long id, String username, String password, String nickname, MemberRole role) {
+		return new Member(id, username, password, nickname, role);
 	}
 
 	public void updateProfile(UpdateProfileRequest request) {

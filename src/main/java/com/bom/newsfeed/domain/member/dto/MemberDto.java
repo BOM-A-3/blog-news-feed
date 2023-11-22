@@ -7,10 +7,10 @@ import lombok.Getter;
 
 @Getter
 public class MemberDto {
-	private String username;
-	private String password;
-	private String nickname;
-	private MemberRole role;
+	private final String username;
+	private final String password;
+	private final String nickname;
+	private final MemberRole role;
 
 	public MemberDto(String username, String password, String nickname, MemberRole role) {
 		this.username = username;

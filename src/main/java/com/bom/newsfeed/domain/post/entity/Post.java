@@ -1,6 +1,7 @@
 package com.bom.newsfeed.domain.post.entity;
 import java.util.List;
 
+import com.bom.newsfeed.domain.category.entity.Category;
 import com.bom.newsfeed.domain.comment.entity.Comment;
 import com.bom.newsfeed.domain.member.entity.Member;
 import com.bom.newsfeed.domain.post.dto.PostRequestDto;
@@ -16,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,6 +53,11 @@ public class Post extends BaseEntity {
 	// 파일 정보
 	@OneToMany(mappedBy = "post" , cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostFile> postFiles;
+
+	//
+	@ManyToOne
+	@JoinColumn(name = "category_id")
+	private Category category;
 
 	public Post(PostRequestDto requestDto, Member member) {
 		this.title = requestDto.getTitle();

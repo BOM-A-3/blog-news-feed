@@ -11,6 +11,6 @@ import com.bom.newsfeed.domain.post.entity.Post;
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
 
-	List<Post> findAllByIdOrderByCreatedDateTimeDesc();
+	List<Post> findAllByOrderByCreatedDateTimeDesc();
 
 }

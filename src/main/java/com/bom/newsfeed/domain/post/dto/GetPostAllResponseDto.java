@@ -11,13 +11,13 @@ import lombok.Getter;
 @Getter
 public class GetPostAllResponseDto {
 
-	private String title;
+	private final String title;
 
-	private String content;
+	private final String content;
 
-	private String memberName;
+	private final String memberName;
 
-	private List<PostFile> postFiles;
+	private final List<PostFile> postFiles;
 
 	public GetPostAllResponseDto(Post post)
 	{

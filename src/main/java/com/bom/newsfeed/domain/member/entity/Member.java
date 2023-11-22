@@ -42,15 +42,16 @@ public class Member extends BaseEntity {
 	@Column(name = "role")
 	private MemberRole role;
 
-	private Member(String username, String password, MemberRole role) {
+	private Member(String username, String password, String nickname, MemberRole role) {
 		this.username = username;
 		this.password = password;
+		this.nickname = nickname;
 		this.role = role;
 		this.createBy = username;
 		this.modifiedBy = username;
 	}
 
-	public static Member of(String username, String password) {
-		return new Member(username, password, MemberRole.USER);
+	public static Member of(String username, String password, String nickname) {
+		return new Member(username, password, nickname, MemberRole.USER);
 	}
 }

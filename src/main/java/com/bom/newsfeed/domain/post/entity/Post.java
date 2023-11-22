@@ -1,6 +1,10 @@
 package com.bom.newsfeed.domain.post.entity;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
+import com.bom.newsfeed.domain.comment.entity.Comment;
+import com.bom.newsfeed.domain.comment.repository.CommentRepository;
 import com.bom.newsfeed.domain.member.entity.Member;
 import com.bom.newsfeed.domain.post.dto.PostRequestDto;
 import com.bom.newsfeed.global.common.entity.BaseEntity;
@@ -12,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,10 +61,4 @@ public class Post extends BaseEntity {
 		this.title = requestDto.getTitle();
 		this.content = requestDto.getContent();
 	}
-
-
-
-
-
-
 }

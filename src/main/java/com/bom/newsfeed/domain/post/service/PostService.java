@@ -32,6 +32,10 @@ public class PostService {
 
 
 
+
+
+
+
 	private Post findPost(Long id) {
 		return postRepository.findById(id).orElseThrow(()->
 			 new IllegalArgumentException("정보를 찾을 수 없습니다.")

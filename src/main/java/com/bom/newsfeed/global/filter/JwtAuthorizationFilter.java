@@ -12,6 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.bom.newsfeed.global.security.UserDetailsServiceImpl;
 import com.bom.newsfeed.global.util.JwtUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	private final JwtUtil jwtUtil;
 	private final UserDetailsServiceImpl userDetailsService;
+	private final ObjectMapper objectMapper;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -38,7 +40,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
 		filterChain.doFilter(request, response);
 	}
-
 	// 인증 처리
 	public void setAuthentication(String username) {
 		SecurityContext context = SecurityContextHolder.createEmptyContext();

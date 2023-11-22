@@ -26,9 +26,14 @@ public class MemberService {
 			throw new AlreadyExistMemberException();
 		}
 
-		if (memberRepository.existsByNickname(request.getNickname())) {
+		verifyNickname(request.getNickname());
+
+		memberRepository.save(request.toEntity(passwordEncoder));
+	}
+
+	public void verifyNickname(String nickname) {
+		if (memberRepository.existsByNickname(nickname)) {
 			throw new AlreadyExistNicknameException();
 		}
-		memberRepository.save(request.toEntity(passwordEncoder));
 	}
 }

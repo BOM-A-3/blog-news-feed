@@ -8,10 +8,15 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Table(name = "category")
+@Getter
 @Entity
+@NoArgsConstructor
 public class Category {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
@@ -19,4 +24,11 @@ public class Category {
 
 	@Enumerated(EnumType.STRING)
 	private CategoryType category;
+
+
+	public Category(CategoryType categoryType){
+		this.category =  categoryType;
+	}
+
+
 }

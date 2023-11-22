@@ -15,9 +15,20 @@ public enum CategoryType {
 		this.ko = ko;
 	}
 
+
+
+
 	public String getKo() {
 		return ko;
 	}
+
+	public static CategoryType getType(String categoryType ){
+		return Arrays.stream(CategoryType.values())
+			.filter(type ->
+				type.ko.equals(categoryType)).findFirst()
+			.orElse(CategoryType.ETC);
+	}
+
 
 	public static CategoryType findByName(String categoryType) {
 		return Arrays.stream(CategoryType.values())

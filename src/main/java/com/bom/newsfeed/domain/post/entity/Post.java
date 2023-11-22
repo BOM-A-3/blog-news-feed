@@ -1,6 +1,8 @@
 package com.bom.newsfeed.domain.post.entity;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.bom.newsfeed.domain.category.constant.CategoryType;
 import com.bom.newsfeed.domain.category.entity.Category;
 import com.bom.newsfeed.domain.comment.entity.Comment;
 import com.bom.newsfeed.domain.member.dto.MemberDto;
@@ -49,29 +51,29 @@ public class Post extends BaseEntity {
 
 	// 댓글 정보
 	@OneToMany(mappedBy = "post" , cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Comment> comments;
+	private List<Comment> comments = new ArrayList<>();
 
 	// 파일 정보
 	@OneToMany(mappedBy = "post" , cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<PostFile> postFiles;
+	private List<PostFile> postFiles = new ArrayList<>();
 
 	// 카테고리 정보
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category category;
 
-	public Post(PostRequestDto requestDto, Member member) {
+	public Post(PostRequestDto requestDto, Member member, Category category) {
 		this.title = requestDto.getTitle();
 		this.content = requestDto.getContent();
 		this.member = member;
-		this.category = requestDto.getCategory();
+		this.category = category;
 	}
 
-	public void update(PostRequestDto requestDto)
+	public void update(PostRequestDto requestDto, Category category)
 	{
 		this.title = requestDto.getTitle();
 		this.content = requestDto.getContent();
-		this.category = requestDto.getCategory();
+		this.category = category;
 	}
 
 	public void addComment(Comment comment) {

@@ -19,5 +19,6 @@ public class PostRequestDto {
 
 	private List<MultipartFile> multipartFiles;
 
-	private Category category;
+	@NotBlank
+	private String category;
 }

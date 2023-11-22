@@ -17,14 +17,14 @@ public class GetPostAllResponseDto {
 
 	private final String memberName;
 
-	private final List<PostFile> postFiles;
+	private final List<GetPostFIleResponse> postFiles;
 
 	public GetPostAllResponseDto(Post post)
 	{
 		this.title = post.getTitle();
 		this.content = post.getContent();
-		this.memberName = post.getMembers().getUsername();
-		this.postFiles = post.getPostFiles();
+		this.memberName = post.getMember().getNickname();
+		this.postFiles = post.getPostFiles().stream().map(GetPostFIleResponse::new).toList();
 	}
 
 }

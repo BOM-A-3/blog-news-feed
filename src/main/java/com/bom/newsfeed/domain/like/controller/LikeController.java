@@ -36,7 +36,7 @@ public class LikeController {
 		return ResponseEntity.ok(likeService.deleteLike(postId,memberDto));
 	}
 
-	@GetMapping("/post/{postId}/total/like")
+	@GetMapping("/post/{postId}/like/total")
 	public ResponseEntity<?> getPostTotalLike(@PathVariable Long postId){
 		return ResponseEntity.ok(likeService.getPostTotalLike(postId));
 	}

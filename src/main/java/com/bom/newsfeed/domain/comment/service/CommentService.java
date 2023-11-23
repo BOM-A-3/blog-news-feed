@@ -18,12 +18,6 @@ public class CommentService {
 	private final CommentRepository commentRepository;
 	private final PostRepository postRepository;
 
-
-// 댓글 조회
-//	public List<CommentResponseDto> getFindAll() {
-//		return null;
-//	}
-
 	// 댓글 작성
 	@Transactional
 	public void  createComment(Long postId, CommentRequestDto commentRequestDto, MemberDto memberDto) {
@@ -52,7 +46,6 @@ public class CommentService {
 		commentRepository.delete(comment);
 	}
 
-	// ----------------
 
 	public Post findPost(Long postId) {
 		return postRepository.findById(postId).orElseThrow(() ->

@@ -1,5 +1,5 @@
 # workflow의 이름
-name: CI
+name: CI/CD
 # 해당 workflow가 언제 실행될 것인지에 대한 트리거를 지정
 on:
   push:
@@ -46,3 +46,23 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
         shell: bash
+
+      # make zip file
+      - name: Make zip file
+        run: zip -qq -r ./$GITHUB_SHA.zip .
+      # AWS 사용자 정보 입력
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      # S3에 zip 파일 업로드
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy/$GITHUB_SHA.zip --source .
+      # CodeDeploy에 배포 요청
+      - name: Code Deploy
+        run: aws deploy create-deployment --application-name ${{ secrets.CODE_DEPLOY_APP_NAME }}
+          --deployment-config-name CodeDeployDefault.OneAtATime
+          --deployment-group-name ${{ secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }}
+        

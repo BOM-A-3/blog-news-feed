@@ -1,0 +1,68 @@
+# workflow의 이름
+name: CI/CD
+# 해당 workflow가 언제 실행될 것인지에 대한 트리거를 지정
+on:
+  push:
+    branches: [ main ] # main branch로 push 될 때 실행됩니다.
+  pull_request:
+    branches: [ main ]  # main branch로 pull request될 때 실행됩니다.
+# workflow는 한개 이상의 job을 가지며, 각 job은 여러 step에 따라 단계를 나눌 수 있습니다.
+jobs:
+  build:
+    name: CI
+    # 해당 jobs에서 아래의 steps들이 어떠한 환경에서 실행될 것인지를 지정합니다.
+    runs-on: ubuntu-latest
+    steps:
+     # 작업에서 액세스할 수 있도록 $GITHUB_WORKSPACE에서 저장소를 체크아웃합니다.
+      - uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      # 환경별 yml 파일 생성(3) - prod
+      - name: make application-prod.yml
+        if: contains(github.ref, 'main')
+        run: |
+          cd ./src/main/resources
+          touch ./application-prod.yml
+          echo "${{ secrets.YML_PROD }}" | base64 --decode > ./application-prod.yml
+        shell: bash
+
+      # 환경별 yml 파일 생성 - application-properties.yml
+      - name: make application-properties.yml
+        if: |
+          contains(github.ref, 'main') ||
+        run: |
+          cd ./src/main/resources # resources 폴더로 이동
+          touch ./application-properties.yml # application-properties.yml 생성
+          echo "${{ secrets.YML_PROPERTIES }}" | base64 --decode > ./application-properties.yml  # github actions에서 설정한 값을 application-properties.yml파일에 쓰기
+        shell: bash
+          
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+        shell: bash
+      - name: Build with Gradle
+        run: ./gradlew build
+        shell: bash
+
+      # make zip file
+      - name: Make zip file
+        run: zip -qq -r ./$GITHUB_SHA.zip .
+      # AWS 사용자 정보 입력
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      # S3에 zip 파일 업로드
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy/$GITHUB_SHA.zip --source .
+      # CodeDeploy에 배포 요청
+      - name: Code Deploy
+        run: aws deploy create-deployment --application-name ${{ secrets.CODE_DEPLOY_APP_NAME }}
+          --deployment-config-name CodeDeployDefault.OneAtATime
+          --deployment-group-name ${{ secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }}
+          --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=deploy/$GITHUB_SHA.zip

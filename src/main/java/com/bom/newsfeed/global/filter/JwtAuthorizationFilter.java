@@ -12,7 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.bom.newsfeed.global.security.UserDetailsServiceImpl;
 import com.bom.newsfeed.global.util.JwtUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.bom.newsfeed.global.util.RedisUtil;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -24,8 +24,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	private final JwtUtil jwtUtil;
+	private final RedisUtil redisUtil;
 	private final UserDetailsServiceImpl userDetailsService;
-	private final ObjectMapper objectMapper;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -34,8 +34,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
 		if (StringUtils.hasText(tokenValue)) {
 			Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
+			String logOutToken = redisUtil.getKey("Logout:" + info.getSubject());
+
 			//Logout 토큰 검증
-			setAuthentication(info.getSubject());
+			if (!StringUtils.hasText(logOutToken) || !tokenValue.equals(logOutToken)) {
+				setAuthentication(info.getSubject());
+			}
 		}
 
 		filterChain.doFilter(request, response);

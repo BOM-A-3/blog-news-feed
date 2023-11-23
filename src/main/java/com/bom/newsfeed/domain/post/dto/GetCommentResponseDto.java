@@ -7,7 +7,7 @@ import com.bom.newsfeed.domain.comment.entity.Comment;
 import lombok.Getter;
 
 @Getter
-public class GetCommentResponse {
+public class GetCommentResponseDto {
 
 	private final Long id;
 
@@ -19,13 +19,12 @@ public class GetCommentResponse {
 
 	private final LocalDateTime modifiedDateTime;
 
-	public GetCommentResponse(Comment comment) {
+	public GetCommentResponseDto(Comment comment) {
 		this.id= comment.getId();
 		this.content = comment.getComment();
 		this.memberName = comment.getMember().getNickname();
 		this.createdDateTime = comment.getCreatedDateTime();
 		this.modifiedDateTime = comment.getModifiedDateTime();
-
 	}
 
 }

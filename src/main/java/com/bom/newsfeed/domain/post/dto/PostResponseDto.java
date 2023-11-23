@@ -3,9 +3,7 @@ package com.bom.newsfeed.domain.post.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.bom.newsfeed.domain.category.entity.Category;
 import com.bom.newsfeed.domain.post.entity.Post;
-import com.bom.newsfeed.domain.postfile.entity.PostFile;
 
 import lombok.Getter;
 
@@ -20,7 +18,7 @@ public class PostResponseDto {
 
 	private final String memberName;
 
-	private final List<GetPostFIleResponse> postFileList;
+	private final List<GetPostFIleResponseDto> postFileList;
 
 	private final LocalDateTime creatDateTime;
 
@@ -35,7 +33,7 @@ public class PostResponseDto {
 		this.memberName = post.getMember().getNickname();
 		this.creatDateTime = post.getCreatedDateTime();
 		this.modifyDateTime = post.getModifiedDateTime();
-		this.postFileList = post.getPostFiles().stream().map(GetPostFIleResponse::new).toList();
+		this.postFileList = post.getPostFiles().stream().map(GetPostFIleResponseDto::new).toList();
 		this.category = post.getCategory().getCategory().getKo();
 	}
 

@@ -29,6 +29,7 @@ public enum ErrorCode {
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다"),
     ALREADY_EXIST_MEMBER(CONFLICT, "이미 존재하는 회원입니다."),
+    ALREADY_EXIST_NICKNAME(CONFLICT, "이미 존재하는 닉네임입니다."),
 
 
     /* 500 INTERNAL_SERVER_ERROR : 서버 에러 */

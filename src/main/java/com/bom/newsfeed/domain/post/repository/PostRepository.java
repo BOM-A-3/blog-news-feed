@@ -14,8 +14,9 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
 	List<Post> findAllByOrderByCreatedDateTimeDesc();
 
+	// Like findByLik
 
-	@Query("select count(l.id) from Like l")
-	Long getTotalCount(Long PostId);
+	// @Query("select count(l.id) from Like l")
+	// Long getTotalCount(Long PostId);
 
 }

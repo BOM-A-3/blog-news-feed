@@ -1,5 +1,6 @@
 package com.bom.newsfeed.domain.post.service;
 
+import static com.bom.newsfeed.global.common.dto.ResponseMessage.*;
 import static com.bom.newsfeed.global.util.MemberUtil.*;
 
 import java.util.List;
@@ -29,9 +30,6 @@ public class PostService {
 		this.categoryRepository = categoryRepository;
 	}
 
-	private static final String ACCEPT_MESSAGE ="접근 권한이 없습니다.";
-
-
 	@Transactional
 	public PostResponseDto createPost(PostRequestDto postRequestDto, MemberDto member) {
 
@@ -53,7 +51,7 @@ public class PostService {
 	public List<GetPostAllResponseDto> getAllPost() {
 		List<Post> postList = postRepository.findAllByOrderByCreatedDateTimeDesc();
 		if (postList.isEmpty()) {
-			throw new NullPointerException("목록이 비어있습니다");
+			throw new NullPointerException(POST_LIST_NULL_MESSAGE);
 		} else {
 			return postList.stream().map(GetPostAllResponseDto::new).toList();
 		}
@@ -72,7 +70,11 @@ public class PostService {
 	public PostResponseDto updatePost(Long id, MemberDto member , PostRequestDto postRequestDto) throws IllegalAccessException {
 		Post post = findPost(id);
 		Category category = categoryRepository.findByCategory(CategoryType.getType(postRequestDto.getCategory()));
-		matchedMember(post.getMember().getUsername(),member.getUsername(),ACCEPT_MESSAGE);
+		if(category == null) {
+			category  = new Category(CategoryType.getType(postRequestDto.getCategory()));
+			categoryRepository.save(category);
+		}
+		matchedMember(post.getMember().getUsername(),member.getUsername(),NOT_ACCEPT_MESSAGE);
 		post.update(postRequestDto, category);
 
 		return new PostResponseDto(post);
@@ -82,17 +84,14 @@ public class PostService {
 	public Long deletePost(Long id, MemberDto memberDto) throws IllegalAccessException
 	{
 		Post post = findPost(id);
-		matchedMember(post.getMember().getUsername(),memberDto.getUsername(),ACCEPT_MESSAGE);
+		matchedMember(post.getMember().getUsername(),memberDto.getUsername(), NOT_ACCEPT_MESSAGE);
 		postRepository.delete(post);
 		return id;
 	}
 
-
-
-
 	public Post findPost(Long id) {
 		return postRepository.findById(id).orElseThrow(()->
-			 new IllegalArgumentException("정보를 찾을 수 없습니다.")
+			 new IllegalArgumentException(NOT_INFO_MESSAGE)
 		);
 	}
 

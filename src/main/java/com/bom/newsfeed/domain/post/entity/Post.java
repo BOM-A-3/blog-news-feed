@@ -1,12 +1,10 @@
 package com.bom.newsfeed.domain.post.entity;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bom.newsfeed.domain.category.constant.CategoryType;
 import com.bom.newsfeed.domain.category.entity.Category;
 import com.bom.newsfeed.domain.comment.entity.Comment;
-import com.bom.newsfeed.domain.like.entity.Like;
-import com.bom.newsfeed.domain.member.dto.MemberDto;
 import com.bom.newsfeed.domain.member.entity.Member;
 import com.bom.newsfeed.domain.post.dto.PostRequestDto;
 import com.bom.newsfeed.domain.postfile.entity.PostFile;
@@ -21,7 +19,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,10 +37,6 @@ public class Post extends BaseEntity {
 	// 제목
 	@Column
 	private String title;
-
-	// 좋아요수
-	@Column
-	private Long likeCount;
 
 	// 내용
 	@Column(length = 2000)
@@ -80,7 +73,6 @@ public class Post extends BaseEntity {
 		this.content = requestDto.getContent();
 		this.category = category;
 	}
-
 
 	public void addComment(Comment comment) {
 		comment.initPost(this);

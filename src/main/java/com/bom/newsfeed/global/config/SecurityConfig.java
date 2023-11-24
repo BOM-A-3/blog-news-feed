@@ -14,10 +14,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.bom.newsfeed.global.filter.JwtAuthenticationFilter;
 import com.bom.newsfeed.global.filter.JwtAuthorizationFilter;
+import com.bom.newsfeed.global.security.AccessDeniedHandlerImpl;
 import com.bom.newsfeed.global.security.AuthenticationEntryPointImpl;
 import com.bom.newsfeed.global.security.UserDetailsServiceImpl;
 import com.bom.newsfeed.global.util.JwtUtil;
@@ -41,6 +43,7 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		// CSRF 설정
 		http.csrf(AbstractHttpConfigurer::disable);
+		http.httpBasic(AbstractHttpConfigurer::disable);
 
 		// 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
 		http.sessionManagement(sessionManagement ->
@@ -59,6 +62,7 @@ public class SecurityConfig {
 			.exceptionHandling(handle ->
 				handle
 					.authenticationEntryPoint(authenticationEntryPoint())
+					.accessDeniedHandler(accessDeniedHandler())
 			);
 
 		// 필터 관리
@@ -85,6 +89,10 @@ public class SecurityConfig {
 		return new AuthenticationEntryPointImpl(objectMapper);
 	}
 	@Bean
+	public AccessDeniedHandler accessDeniedHandler(){
+		return new AccessDeniedHandlerImpl(objectMapper);
+	}
+	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
 		JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, redisUtil, objectMapper);
 		filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
@@ -94,7 +102,7 @@ public class SecurityConfig {
 
 	private static final String[] WHITE_LIST_URL = {
 		"/api/auth/**",
-		"/api/members/signup",
+		"/api/member/signup",
 
 		//swagger
 		"/v1/api-docs/**",
@@ -107,6 +115,9 @@ public class SecurityConfig {
 		"/configuration/security",
 		"/swagger-ui/**",
 		"/webjars/**",
-		"/swagger-ui.html"
+		"/swagger-ui.html",
+
+		//error
+		"/error"
 	};
 }

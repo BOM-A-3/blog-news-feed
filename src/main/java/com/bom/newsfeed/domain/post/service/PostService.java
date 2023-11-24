@@ -76,7 +76,12 @@ public class PostService {
 
 	// 게시글 업데이트
 	@Transactional
-	public PostResponseDto updatePost(Long id, MemberDto member , PostUpdateRequestDto postUpdateRequestDto) {
+	public PostResponseDto updatePost(Long id, MemberDto member ,
+									  PostUpdateRequestDto postUpdateRequestDto,
+		 							  List<MultipartFile> updateFile) throws Exception{
+
+		// 파일 업데이트
+		postFileService.updateFile(id, postUpdateRequestDto.getFileUrl(),updateFile );
 		Post post = findPost(id);
 		matchedMember(post.getMember().getUsername(),member.getUsername());
 
@@ -85,10 +90,6 @@ public class PostService {
 			category  = new Category(CategoryType.getType(postUpdateRequestDto.getCategory()));
 			categoryRepository.save(category);
 		}
-
-		// 파일 업데이트
-		postFileService.updateFile(id, postUpdateRequestDto.getFileUrl());
-
 		PostRequestDto postRequestDto = new PostRequestDto(postUpdateRequestDto);
 		post.update(postRequestDto, category);
 

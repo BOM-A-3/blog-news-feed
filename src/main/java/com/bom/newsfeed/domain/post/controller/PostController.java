@@ -63,8 +63,9 @@ public class PostController {
 	@PutMapping(path = "/post/{id}",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<?> updatePost(@PathVariable Long id,
 										@CurrentMember MemberDto memberDto,
-										@RequestBody PostUpdateRequestDto postUpdateRequestDto) {
-		return ResponseEntity.ok(postService.updatePost(id,memberDto, postUpdateRequestDto));
+										@RequestPart PostUpdateRequestDto postUpdateRequestDto,
+										@RequestPart List<MultipartFile> updateFile) throws Exception{
+		return ResponseEntity.ok(postService.updatePost(id,memberDto, postUpdateRequestDto, updateFile));
 	}
 
 	// 게시글 삭제

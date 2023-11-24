@@ -1,0 +1,28 @@
+#로컬 개발 설정은 여기서
+logging:
+  level:
+    com.bom.newsfeed: info
+    org.hibernate:
+      orm.jdbc.bind: debug
+      type: debug
+      stat: info
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: jdbc:mysql://blog-news-feed-database1.czemqttsgefj.us-east-1.rds.amazonaws.com:3306/blognewsfeed?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: admin
+    password: 12345678
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  data:
+    redis:
+      host: localhost
+      port: 6379

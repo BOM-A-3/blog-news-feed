@@ -2,7 +2,6 @@ package com.bom.newsfeed.domain.member.controller;
 
 import static com.bom.newsfeed.global.common.constant.ResponseCode.*;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,10 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bom.newsfeed.domain.member.dto.MemberDto;
 import com.bom.newsfeed.domain.member.dto.request.SignupRequest;
 import com.bom.newsfeed.domain.member.dto.request.UpdateProfileRequest;
-import com.bom.newsfeed.domain.member.dto.response.UpdateProfileResponse;
 import com.bom.newsfeed.domain.member.service.MemberService;
 import com.bom.newsfeed.global.annotation.CurrentMember;
-import com.bom.newsfeed.global.common.dto.DefaultRes;
 import com.bom.newsfeed.global.common.dto.ErrorResponse;
 import com.bom.newsfeed.global.common.dto.SuccessResponse;
 
@@ -30,7 +27,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jdk.jfr.ContentType;
 
 @Tag(name = "회원 API", description = "회원 API")
 @RequestMapping("/api/members")

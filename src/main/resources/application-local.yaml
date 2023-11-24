@@ -21,6 +21,16 @@ spring:
     password: "*STARrootroot"
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  cloud:
+    aws:
+      s3:
+        bucket: blog-news-feed-server
+      stack.auto: false
+      region.static: ap-northeast-2
+      credentials:
+        accessKey: AKIAUFQVTGL3UD6ZP77X
+        secretKey: 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
+
 
   jpa:
     open-in-view: false

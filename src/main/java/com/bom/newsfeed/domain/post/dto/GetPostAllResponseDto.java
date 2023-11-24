@@ -9,7 +9,6 @@ import lombok.Getter;
 
 @Getter
 public class GetPostAllResponseDto {
-
 	private final Long id;
 
 	private final String title;
@@ -19,10 +18,7 @@ public class GetPostAllResponseDto {
 	private final String memberName;
 
 	private final List<GetPostFIleResponseDto> postFiles;
-
-	private final LocalDateTime createDateTime;
-
-	private final long likes;
+	private final LocalDateTime createdDateTime;
 
 	public GetPostAllResponseDto(Post post)
 	{
@@ -31,8 +27,6 @@ public class GetPostAllResponseDto {
 		this.content = post.getContent();
 		this.memberName = post.getMember().getNickname();
 		this.postFiles = post.getPostFiles().stream().map(GetPostFIleResponseDto::new).toList();
-		this.createDateTime = post.getCreatedDateTime();
-		this.likes = post.getLikes().size();
+		this.createdDateTime = post.getCreatedDateTime();
 	}
-
 }

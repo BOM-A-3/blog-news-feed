@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.bom.newsfeed.domain.category.entity.Category;
 import com.bom.newsfeed.domain.comment.entity.Comment;
+import com.bom.newsfeed.domain.like.entity.Likes;
 import com.bom.newsfeed.domain.member.entity.Member;
 import com.bom.newsfeed.domain.post.dto.PostRequestDto;
 import com.bom.newsfeed.domain.postfile.entity.PostFile;
@@ -54,6 +55,10 @@ public class Post extends BaseEntity {
 	// 파일 정보
 	@OneToMany(mappedBy = "post" , cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostFile> postFiles = new ArrayList<>();
+
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Likes> likes = new ArrayList<>();
+
 
 	// 카테고리 정보
 	@ManyToOne

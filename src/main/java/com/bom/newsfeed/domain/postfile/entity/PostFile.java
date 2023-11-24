@@ -1,7 +1,6 @@
 package com.bom.newsfeed.domain.postfile.entity;
 
 import com.bom.newsfeed.domain.post.entity.Post;
-import com.bom.newsfeed.domain.postfile.dto.PostFileRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,9 +36,9 @@ public class PostFile {
 	@JoinColumn(name = "post_id")
 	private Post post;
 
-	public PostFile(PostFileRequestDto postFileRequestDto) {
-		this.url = getUrl();
-		this.filetype = postFileRequestDto.getFileType();
+	public PostFile(String url, FileType fileType) {
+		this.url = url;
+		this.filetype = fileType;
 	}
 
 }

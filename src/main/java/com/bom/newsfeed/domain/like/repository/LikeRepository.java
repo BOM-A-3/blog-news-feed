@@ -15,5 +15,5 @@ public interface LikeRepository extends JpaRepository<Likes,Long> {
 	Likes findByPostIdAndMemberId(Long postId, Long memberId);
 
 	// 해당 포스트의 Like개수 가져오기
-	Long countByPostId(Long postId);
+	// Long countByPostId(Long postId);
 }

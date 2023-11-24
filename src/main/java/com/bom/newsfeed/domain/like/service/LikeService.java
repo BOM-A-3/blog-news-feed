@@ -1,6 +1,7 @@
 package com.bom.newsfeed.domain.like.service;
 
 import static com.bom.newsfeed.global.common.dto.ResponseMessage.*;
+import static com.bom.newsfeed.global.exception.ErrorCode.*;
 import static com.bom.newsfeed.global.util.MemberUtil.*;
 
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import com.bom.newsfeed.domain.like.repository.LikeRepository;
 import com.bom.newsfeed.domain.member.dto.MemberDto;
 import com.bom.newsfeed.domain.post.entity.Post;
 import com.bom.newsfeed.domain.post.service.PostService;
+import com.bom.newsfeed.global.exception.ApiException;
 
 @Service
 public class LikeService {
@@ -24,12 +26,12 @@ public class LikeService {
 	}
 
 	@Transactional
-	public String addLike(Long postId, MemberDto memberDto) throws IllegalAccessException{
+	public String addLike(Long postId, MemberDto memberDto) throws ApiException {
 
 		Post post = postService.findPost(postId);
 
 		// 자기 게시글에 좋아요 금지
-		notMatchedMember(post.getMember().getUsername(),memberDto.getUsername(),NOT_MY_POST_INPUT_LIKE);
+		notMatchedMember(post.getMember().getUsername(),memberDto.getUsername());
 
 		// 좋아요 정보를 추가하기 전에 전에 눌렀던 적이 있는지 체크
 		Likes like = likeRepository.findByPostIdAndMemberId(postId, memberDto.getId());
@@ -37,7 +39,7 @@ public class LikeService {
 			like = new Likes(post, memberDto.toEntity());
 		}
 		else{
-			throw new IllegalAccessException(ALREADY_INPUT_LIKE);
+			throw new ApiException(ALREADY_EXIST_LIKE);
 		}
 
 		likeRepository.save(like);
@@ -51,7 +53,7 @@ public class LikeService {
 		Likes like = likeRepository.findByPostIdAndMemberId(postId, memberDto.getId());
 		// 없으면 예외처리
 		if(like == null) {
-			throw new NullPointerException(LIKE_INPUT_NULL);
+			throw new ApiException(NOT_INFO_MESSAGE);
 		}
 		else {
 			likeRepository.delete(like);
@@ -59,8 +61,5 @@ public class LikeService {
 		}
 	}
 
-	public Long getPostTotalLike(Long postId){
-		return likeRepository.countByPostId(postId);
-	}
 
 }

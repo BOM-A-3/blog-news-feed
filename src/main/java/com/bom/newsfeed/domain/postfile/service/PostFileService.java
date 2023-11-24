@@ -2,6 +2,7 @@ package com.bom.newsfeed.domain.postfile.service;
 
 import static com.bom.newsfeed.global.util.MemberUtil.*;
 
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,22 +65,37 @@ public class PostFileService {
 	}
 
 	@Transactional
-	public void updateFile(Long postId, List<String> files) {
-		List<PostFile> postFiles = postFileRepository.findByPostId(postId);
-		List<PostFile> deletePostFile = new ArrayList<>();
-		// if (!files.isEmpty()){
-		// 	urlList = s3Uploader.uploadFileToS3(files, "static/file-image");
-		// }
-		//
-		for (int i = 0; i < postFiles.size(); i++) {
-			if(files.contains(postFiles.get(i).getUrl())) {
-				deletePostFile.add(postFiles.get(i));
-			}
-		}
-		postFileRepository.deleteAll(deletePostFile);
+	public void updateFile(Long postId, List<String> postUpdateFileList, List<MultipartFile> updateFile) throws Exception{
+		List<PostFile> postFileList = postFileRepository.findByPostId(postId);
+
+		List<PostFile> deleteFiles;
+		deleteFiles = deleteCheckFile(postFileList,postUpdateFileList);
+		createFile(updateFile);
+		deleteListFile(deleteFiles);
+		postFileRepository.deleteAll(deleteFiles);
+
+
 
 	}
 
+	public void deleteListFile(List<PostFile> deleteFiles) throws Exception
+	{
+		for (PostFile deleteFile: deleteFiles) {
+			s3Uploader.deleteS3(deleteFile.getUrl());
+		}
+	}
+
+
+	public List<PostFile> deleteCheckFile( List<PostFile> postFileList, List<String>postUpdateFileList){
+		List<PostFile> deleteFileList = new ArrayList<>();
+		for (int i = 0; i < postFileList.size(); i++) {
+			// 목록에 업는 파일리스트 체크(삭제할 파일 리스트)
+			if(!postUpdateFileList.contains(postFileList.get(i).getUrl())) {
+				deleteFileList.add(postFileList.get(i));
+			}
+		}
+		return deleteFileList;
+	}
 
 
 

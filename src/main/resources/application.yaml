@@ -9,8 +9,9 @@ spring:
   profiles:
     include:
       - properties
-      - local
-    default: local
+      - prod
+    default: prod
+
 
 servlet:
   multipart:

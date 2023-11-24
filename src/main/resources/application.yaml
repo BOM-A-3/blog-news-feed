@@ -10,7 +10,6 @@ spring:
     include:
       - properties
       - prod
-    default: local
 
   servlet:
     multipart:

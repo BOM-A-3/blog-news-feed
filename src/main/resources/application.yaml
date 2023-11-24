@@ -9,7 +9,7 @@ spring:
   profiles:
     include:
       - properties
-      - local
+      - prod
     default: local
 
   servlet:

@@ -24,9 +24,18 @@ public class UpdateProfileRequest {
 	)
 	private final String nickname;
 
+
+	@Schema(
+		description = "한 줄 소개",
+		example = "안녕하세요~"
+	)
+	@Size(
+		max = 50,
+		message = "최대 50자 이하로만 입력가능합니다."
+	)
 	private final String introduce;
 
-	@Schema(description = "로그인 비밀번호", example = "password12")
+	@Schema(description = "변경할 비밀번호", example = "password12")
 	@Pattern(
 		regexp = "^[a-zA-Z0-9]+$",
 		message = "비밀번호는 알파벳 대/소문자, 숫자의 조합으로 입력해야합니다."
@@ -38,7 +47,7 @@ public class UpdateProfileRequest {
 	)
 	private final String changePassword;
 
-	@Schema(description = "로그인 비밀번호", example = "password12")
+	@Schema(description = "변경할 비밀번호 확인", example = "password12")
 	@Pattern(
 		regexp = "^[a-zA-Z0-9]+$",
 		message = "비밀번호는 알파벳 대/소문자, 숫자의 조합으로 입력해야합니다."

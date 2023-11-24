@@ -62,6 +62,7 @@ public class SecurityConfig {
 			);
 
 		// 필터 관리
+		http.addFilterBefore(jwtAuthenticationFilter(), JwtAuthenticationFilter.class);
 		http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
@@ -92,8 +93,8 @@ public class SecurityConfig {
 
 
 	private static final String[] WHITE_LIST_URL = {
-		"/api/members/signup",
 		"/api/auth/**",
+		"/api/members/signup",
 
 		//swagger
 		"/v1/api-docs/**",

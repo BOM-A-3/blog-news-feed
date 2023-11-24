@@ -1,33 +1,34 @@
 package com.bom.newsfeed.global.common.dto;
 
+import java.time.LocalDateTime;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
 
-@Data
-@AllArgsConstructor
-@Builder
-public class DefaultRes<T> {
-    private int statusCode;
-    private String responseMessage;
-    private T data;
+@Getter
+public abstract class DefaultRes<T> {
+    @Schema(
+        description = "상태코드",
+        example = "200"
+    )
 
-    public DefaultRes(final int statusCode, final String responseMessage) {
+    public final int statusCode;
+
+    @Schema(
+        description = "응답 메시지",
+        example = "응답 메시지"
+    )
+    public final String message;
+
+    @Schema(description = "발생일")
+    public final LocalDateTime timestamp = LocalDateTime.now();
+
+    @Schema(description = "데이터", nullable = true)
+    public final T data;
+
+    protected DefaultRes(int statusCode, String message, T data) {
         this.statusCode = statusCode;
-        this.responseMessage = responseMessage;
-        this.data = null;
-    }
-
-    public static<T> DefaultRes<T> res(final int statusCode, final String responseMessage) {
-        return res(statusCode, responseMessage, null);
-    }
-
-    public static<T> DefaultRes<T> res(final int statusCode, final String responseMessage, final T t) {
-        return DefaultRes.<T>builder()
-                .data(t)
-                .statusCode(statusCode)
-                .responseMessage(responseMessage)
-                .build();
+        this.message = message;
+        this.data = data;
     }
 }

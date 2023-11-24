@@ -26,7 +26,7 @@ public class CommentController {
 										@CurrentMember MemberDto memberDto
 							  ) {
 		commentService.createComment(postId, commentRequestDto, memberDto);
-		return ResponseEntity.ok(DefaultRes.res(StatusCode.CREATE, ResponseMessage.CREATED_COMMENT));
+		return ResponseEntity.ok(null); //DefaultRes.res(StatusCode.CREATE, ResponseMessage.CREATED_COMMENT)
 	}
 
 	// 댓글 수정
@@ -36,7 +36,7 @@ public class CommentController {
 							  			@CurrentMember MemberDto memberDto) {
 
 		commentService.updateComment(commentId, commentRequestDto, memberDto);
-		return ResponseEntity.ok(DefaultRes.res(StatusCode.OK, ResponseMessage.UPDATE_COMMENT));
+		return ResponseEntity.ok(null); //DefaultRes.res(StatusCode.OK, ResponseMessage.UPDATE_COMMENT
 	}
 
 	// 댓글 삭제
@@ -45,6 +45,6 @@ public class CommentController {
 										@CurrentMember MemberDto memberDto) {
 
 		commentService.deleteComment(commentId, memberDto);
-		return ResponseEntity.ok(DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_COMMENT));
+		return ResponseEntity.ok(null); //DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_COMMENT)
 	}
 }

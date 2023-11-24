@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.bom.newsfeed.domain.member.dto.MemberDto;
 import com.bom.newsfeed.domain.member.entity.Member;
 import com.bom.newsfeed.domain.post.dto.PostRequestDto;
+import com.bom.newsfeed.domain.post.dto.PostUpdateRequestDto;
 import com.bom.newsfeed.domain.post.entity.Post;
 import com.bom.newsfeed.domain.post.service.PostService;
 import com.bom.newsfeed.domain.postfile.service.PostFileService;
@@ -59,11 +60,11 @@ public class PostController {
 	}
 
 	// 게시글 수정
-	@PutMapping("/post/{id}")
+	@PutMapping(path = "/post/{id}",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<?> updatePost(@PathVariable Long id,
 										@CurrentMember MemberDto memberDto,
-										@RequestBody PostRequestDto postRequestDto) {
-		return ResponseEntity.ok(postService.updatePost(id,memberDto, postRequestDto));
+										@RequestBody PostUpdateRequestDto postUpdateRequestDto) {
+		return ResponseEntity.ok(postService.updatePost(id,memberDto, postUpdateRequestDto));
 	}
 
 	// 게시글 삭제

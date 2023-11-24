@@ -1,5 +1,7 @@
 package com.bom.newsfeed.global.exception;
 
+import com.bom.newsfeed.global.common.constant.ErrorCode;
+
 import lombok.Getter;
 
 @Getter

@@ -1,4 +1,4 @@
-package com.bom.newsfeed.global.exception;
+package com.bom.newsfeed.global.common.constant;
 
 import static org.springframework.http.HttpStatus.*;
 

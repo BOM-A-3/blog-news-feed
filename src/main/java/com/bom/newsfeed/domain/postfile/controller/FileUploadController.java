@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,7 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.bom.newsfeed.domain.member.dto.MemberDto;
 import com.bom.newsfeed.domain.postfile.service.PostFileService;
+import com.bom.newsfeed.global.annotation.CurrentMember;
+import com.bom.newsfeed.global.exception.ApiException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,17 +51,30 @@ public class FileUploadController {
 	// Controller.java
 
 	private final PostFileService postFileService;
-	/**
-	 * 그룹(팀) 생성
-	 * @param name
-	 * @param file
-	 * @return
-	 */
-	@PostMapping(path = "/file", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity createFile(@RequestPart(value = "name") String name,
-									 @RequestPart(value = "file", required = false) MultipartFile file
-	){
-		// postFileService.createFile(name, file);
-		return new ResponseEntity(null, HttpStatus.OK);
+	// /**
+	//  * 그룹(팀) 생성
+	//  * @param name
+	//  * @param file
+	//  * @return
+	//  */
+	// @PostMapping(path = "/file", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+	// public ResponseEntity createFile(@RequestPart(value = "name") String name,
+	// 								 @RequestPart(value = "file", required = false) MultipartFile file
+	// ){
+	// 	// postFileService.createFile(name, file);
+	// 	return new ResponseEntity(null, HttpStatus.OK);
+	// }
+
+	@DeleteMapping("/post/{postId}/file/{fileId}")
+	public ResponseEntity<?> deleteFile(@PathVariable Long postId,
+										@PathVariable Long fileId,
+										@CurrentMember MemberDto memberDto) throws Exception {
+		postFileService.deleteFile(postId,fileId,memberDto);
+		return  ResponseEntity.ok("삭제 완료");
 	}
+
+
+
+
+
 }

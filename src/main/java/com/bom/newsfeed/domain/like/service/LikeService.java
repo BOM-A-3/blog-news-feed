@@ -1,7 +1,6 @@
 package com.bom.newsfeed.domain.like.service;
 
 import static com.bom.newsfeed.global.common.dto.ResponseMessage.*;
-import static com.bom.newsfeed.global.exception.ErrorCode.*;
 import static com.bom.newsfeed.global.util.MemberUtil.*;
 
 import org.springframework.stereotype.Service;
@@ -12,7 +11,9 @@ import com.bom.newsfeed.domain.like.repository.LikeRepository;
 import com.bom.newsfeed.domain.member.dto.MemberDto;
 import com.bom.newsfeed.domain.post.entity.Post;
 import com.bom.newsfeed.domain.post.service.PostService;
+import com.bom.newsfeed.global.exception.AlreadyExistLikeException;
 import com.bom.newsfeed.global.exception.ApiException;
+import com.bom.newsfeed.global.exception.NotFoundInfoException;
 
 @Service
 public class LikeService {
@@ -39,7 +40,7 @@ public class LikeService {
 			like = new Likes(post, memberDto.toEntity());
 		}
 		else{
-			throw new ApiException(ALREADY_EXIST_LIKE);
+			throw new AlreadyExistLikeException();
 		}
 
 		likeRepository.save(like);
@@ -53,7 +54,7 @@ public class LikeService {
 		Likes like = likeRepository.findByPostIdAndMemberId(postId, memberDto.getId());
 		// 없으면 예외처리
 		if(like == null) {
-			throw new ApiException(NOT_INFO_MESSAGE);
+			throw new NotFoundInfoException();
 		}
 		else {
 			likeRepository.delete(like);

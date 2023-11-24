@@ -166,7 +166,6 @@ public class JwtUtil {
 	public void setTokenResponse(TokenDto tokenDto, HttpServletResponse response) {
 		setHeaderAccessToken(tokenDto.getAccessToken(), response);
 		setCookieRefreshToken(tokenDto.getRefreshToken(), response);
-
 	}
 
 	public void setCookieRefreshToken(String token, HttpServletResponse res) {

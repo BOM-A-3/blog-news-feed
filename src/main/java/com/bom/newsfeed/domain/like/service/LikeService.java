@@ -11,6 +11,9 @@ import com.bom.newsfeed.domain.like.repository.LikeRepository;
 import com.bom.newsfeed.domain.member.dto.MemberDto;
 import com.bom.newsfeed.domain.post.entity.Post;
 import com.bom.newsfeed.domain.post.service.PostService;
+import com.bom.newsfeed.global.exception.AlreadyExistLikeException;
+import com.bom.newsfeed.global.exception.ApiException;
+import com.bom.newsfeed.global.exception.NotFoundInfoException;
 
 @Service
 public class LikeService {
@@ -24,12 +27,12 @@ public class LikeService {
 	}
 
 	@Transactional
-	public String addLike(Long postId, MemberDto memberDto) throws IllegalAccessException{
+	public String addLike(Long postId, MemberDto memberDto) throws ApiException {
 
 		Post post = postService.findPost(postId);
 
 		// 자기 게시글에 좋아요 금지
-		notMatchedMember(post.getMember().getUsername(),memberDto.getUsername(),NOT_MY_POST_INPUT_LIKE);
+		notMatchedMember(post.getMember().getUsername(),memberDto.getUsername());
 
 		// 좋아요 정보를 추가하기 전에 전에 눌렀던 적이 있는지 체크
 		Likes like = likeRepository.findByPostIdAndMemberId(postId, memberDto.getId());
@@ -37,7 +40,7 @@ public class LikeService {
 			like = new Likes(post, memberDto.toEntity());
 		}
 		else{
-			throw new IllegalAccessException(ALREADY_INPUT_LIKE);
+			throw new AlreadyExistLikeException();
 		}
 
 		likeRepository.save(like);
@@ -51,7 +54,7 @@ public class LikeService {
 		Likes like = likeRepository.findByPostIdAndMemberId(postId, memberDto.getId());
 		// 없으면 예외처리
 		if(like == null) {
-			throw new NullPointerException(LIKE_INPUT_NULL);
+			throw new NotFoundInfoException();
 		}
 		else {
 			likeRepository.delete(like);
@@ -59,8 +62,5 @@ public class LikeService {
 		}
 	}
 
-	public Long getPostTotalLike(Long postId){
-		return likeRepository.countByPostId(postId);
-	}
 
 }

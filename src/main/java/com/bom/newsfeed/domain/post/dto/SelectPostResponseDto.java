@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.bom.newsfeed.domain.post.entity.Post;
 
+import lombok.Data;
 import lombok.Getter;
 
 @Getter
@@ -28,9 +29,10 @@ public class SelectPostResponseDto {
 
 	private final List<GetCommentResponseDto> commentList;
 
-	// private final Long likes;
+	private final long likes;
 
-	public SelectPostResponseDto(Post post){
+	public SelectPostResponseDto(Post post)
+	{
 		this.id = post.getId();
 		this.title = post.getTitle();
 		this.content = post.getContent();
@@ -40,7 +42,7 @@ public class SelectPostResponseDto {
 		this.postFileList = post.getPostFiles().stream().map(GetPostFIleResponseDto::new).toList();
 		this.category = post.getCategory().getCategory().getKo();
 		this.commentList = post.getComments().stream().map(GetCommentResponseDto::new).toList();
-		// this.likes = post.getLikeCount();
+		this.likes = post.getLikes().size();
 	}
 
 }

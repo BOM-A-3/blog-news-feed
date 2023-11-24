@@ -1,6 +1,6 @@
 package com.bom.newsfeed.domain.follow.service;
 
-import static com.bom.newsfeed.global.exception.ErrorCode.*;
+import static com.bom.newsfeed.global.common.constant.ErrorCode.*;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

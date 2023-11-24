@@ -1,0 +1,42 @@
+#로컬 개발 설정은 여기서
+logging:
+  level:
+    com.bom.newsfeed: debug
+    org.springframework.web.servlet: debug
+    org.springframework.security: debug
+    org.hibernate:
+      orm.jdbc.bind: trace
+      type: trace
+      stat: debug
+
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/newsfeed
+    username: root
+    password: "*STARrootroot"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+  jpa:
+    open-in-view: false
+    defer-datasource-initialization: true
+    hibernate.ddl-auto: update
+    show-sql: true
+
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+  h2.console.enabled: false
+
+  sql.init.mode: always
+
+  data:
+    redis:
+      host: localhost
+      port: 6379

@@ -1,7 +1,7 @@
 package com.bom.newsfeed.domain.member.controller;
 
-import org.hibernate.sql.Update;
-import org.springframework.http.HttpStatus;
+import static com.bom.newsfeed.global.common.constant.ResponseCode.*;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bom.newsfeed.domain.member.dto.MemberDto;
 import com.bom.newsfeed.domain.member.dto.request.SignupRequest;
 import com.bom.newsfeed.domain.member.dto.request.UpdateProfileRequest;
-import com.bom.newsfeed.domain.member.dto.response.UpdateProfileResponse;
 import com.bom.newsfeed.domain.member.service.MemberService;
 import com.bom.newsfeed.global.annotation.CurrentMember;
 import com.bom.newsfeed.global.common.dto.ErrorResponse;
+import com.bom.newsfeed.global.common.dto.SuccessResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -42,7 +42,8 @@ public class MemberController {
 	@ApiResponses(value = {
 		@ApiResponse(
 			responseCode = "201",
-			description = "회원가입 성공"
+			description = "회원가입 성공",
+			content = @Content(schema = @Schema(implementation = SuccessResponse.class))
 		),
 		@ApiResponse(
 			responseCode = "409",
@@ -51,17 +52,21 @@ public class MemberController {
 		)
 	})
 	@PostMapping("/signup")
-	public ResponseEntity<Object> signup(@RequestBody SignupRequest request) {
-		memberService.signup(request);
-
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+	public ResponseEntity<SuccessResponse<Object>> signup(@RequestBody SignupRequest request) {
+		return ResponseEntity.status(SIGNUP_MEMBER.getHttpStatus().value()).body(
+			SuccessResponse.builder()
+				.responseCode(SIGNUP_MEMBER)
+				.data(memberService.signup(request))
+				.build()
+		);
 	}
 
 	@Operation(summary = "닉네임 중복검사", description = "닉네임 중복검사 API")
 	@ApiResponses(value = {
 		@ApiResponse(
-			responseCode = "204",
-			description = "중복 없음 확인"
+			responseCode = "200",
+			description = "중복 없음 확인",
+			content = @Content(schema = @Schema(implementation = SuccessResponse.class))
 		),
 		@ApiResponse(
 			responseCode = "409",
@@ -70,19 +75,24 @@ public class MemberController {
 		)
 	})
 	@GetMapping("/nickname/verify")
-	public ResponseEntity<Object> verifyNickname(
+	public ResponseEntity<SuccessResponse<Object>> verifyNickname(
 		@Parameter(name = "nickname", description = "닉네임")
 		@RequestParam("nickname") String nickname
 	) {
 		memberService.verifyNickname(nickname);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.ok(SuccessResponse.builder()
+			.responseCode(VERIFY_NICKNAME)
+			.build()
+		);
 	}
 
 	@Operation(summary = "아이디 중복검사", description = "아이디 중복검사 API")
 	@ApiResponses(value = {
 		@ApiResponse(
-			responseCode = "204",
-			description = "중복 없음 확인"
+			responseCode = "200",
+			description = "중복 없음 확인",
+
+			content = @Content(schema = @Schema(implementation = SuccessResponse.class))
 		),
 		@ApiResponse(
 			responseCode = "409",
@@ -96,7 +106,9 @@ public class MemberController {
 		@RequestParam("username") String username
 	) {
 		memberService.verifyUsername(username);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.ok(SuccessResponse.builder()
+			.responseCode(VERIFY_NICKNAME)
+		);
 	}
 
 	@Operation(summary = "프로필 수정", description = "프로필 수정 API")
@@ -104,7 +116,7 @@ public class MemberController {
 		@ApiResponse(
 			responseCode = "200",
 			description = "프로필 수정 API",
-			content = @Content(schema = @Schema(implementation = UpdateProfileResponse.class))
+			content = @Content(schema = @Schema(implementation = SuccessResponse.class))
 		),
 		@ApiResponse(
 			responseCode = "404",
@@ -117,13 +129,47 @@ public class MemberController {
 			content = @Content(schema = @Schema(implementation = ErrorResponse.class))
 		)
 	})
-	@PutMapping("/{memberId}/profile")
-	public void updateProfile (
+	@PutMapping("/{memberId}")
+	public ResponseEntity<SuccessResponse<Object>> updateProfile(
 		@Parameter(name = "memberId", description = "회원 ID")
 		@PathVariable("memberId") Long memberId,
 		@RequestBody UpdateProfileRequest request,
 		@CurrentMember MemberDto memberDto
 	) {
-		ResponseEntity.ok(memberService.updateProfile(memberId, request, memberDto));
+		return ResponseEntity.ok().body(SuccessResponse.builder()
+			.responseCode(UPDATE_PROFILE)
+			.data(memberService.updateProfile(memberId, request, memberDto))
+			.build()
+		);
+	}
+
+	@Operation(summary = "프로필 조회", description = "프로필 조회 API")
+	@ApiResponses(value = {
+		@ApiResponse(
+			responseCode = "200",
+			description = "프로필 조회 API",
+			content = @Content(schema = @Schema(implementation = SuccessResponse.class))
+		),
+		@ApiResponse(
+			responseCode = "404",
+			description = "수정할 회원이 없는 경우",
+			content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+		),
+		@ApiResponse(
+			responseCode = "403",
+			description = "프로필 정보에 대해 수정 권한이 없는 경우",
+			content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+		)
+	})
+	@GetMapping("/{memberId}")
+	public ResponseEntity<SuccessResponse> getProfile(
+		@Parameter(name = "memberId", description = "회원 ID")
+		@PathVariable("memberId") Long memberId
+	) {
+		return ResponseEntity.ok(SuccessResponse.builder()
+			.responseCode(UPDATE_PROFILE)
+			.data(memberService.getProfile(memberId))
+			.build()
+		);
 	}
 }

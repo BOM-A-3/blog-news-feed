@@ -1,7 +1,6 @@
 package com.bom.newsfeed.global.security;
 
-
-import static com.bom.newsfeed.global.exception.ErrorCode.*;
+import static com.bom.newsfeed.global.common.constant.ErrorCode.*;
 
 import java.io.IOException;
 
@@ -21,32 +20,31 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = "Jwt 검증 실패")
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
-    private final ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 
-    public AuthenticationEntryPointImpl(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+	public AuthenticationEntryPointImpl(ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
+	}
 
+	@Override
+	public void commence(HttpServletRequest request, HttpServletResponse response,
+		AuthenticationException authException) throws IOException, ServletException {
+		log.info("로그인 인증 실패");
+		setResponseConfig(response);
+		objectMapper
+			.registerModule(new JavaTimeModule())
+			.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+			.writeValue(response.getWriter(),
+				ErrorResponse.builder()
+					.statusCode(INVALID_AUTH_TOKEN.getHttpStatus().value())
+					.message(INVALID_AUTH_TOKEN.getDetail())
+					.build()
+			);
+	}
 
-    @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        log.info("로그인 인증 실패");
-        setResponseConfig(response);
-        objectMapper
-                .registerModule(new JavaTimeModule())
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-                .writeValue(response.getWriter(),
-                        ErrorResponse.builder()
-                                .status(INVALID_AUTH_TOKEN.getHttpStatus().value())
-                                .name(INVALID_AUTH_TOKEN.name())
-                                .message(INVALID_AUTH_TOKEN.getDetail())
-                                .build()
-                );
-    }
-
-    private void setResponseConfig(HttpServletResponse response) {
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding("utf-8");
-        response.setStatus(INVALID_AUTH_TOKEN.getHttpStatus().value());
-    }
+	private void setResponseConfig(HttpServletResponse response) {
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		response.setCharacterEncoding("utf-8");
+		response.setStatus(INVALID_AUTH_TOKEN.getHttpStatus().value());
+	}
 }

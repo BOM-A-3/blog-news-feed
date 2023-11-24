@@ -1,5 +1,6 @@
 package com.bom.newsfeed.domain.post.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,8 +15,11 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
 	List<Post> findAllByOrderByCreatedDateTimeDesc();
 
+	List<Post> findAllByMember_IdAndCreatedDateTimeBefore(Long memberId, LocalDateTime createdDateTime);
 
-	@Query("select count(l.id) from Like l")
-	Long getTotalCount(Long PostId);
+	// Like findByLik
+
+	// @Query("select count(l.id) from Like l")
+	// Long getTotalCount(Long PostId);
 
 }

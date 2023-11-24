@@ -4,7 +4,9 @@ import com.bom.newsfeed.domain.member.entity.Member;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public class UpdateProfileResponse {
 	@Schema(description = "닉네임", example = "봄봄봄")

@@ -24,21 +24,18 @@ public class LikeController {
 		this.likeService = likeService;
 	}
 
+	// 좋아요
 	@PostMapping("/post/{postId}/like")
 	public ResponseEntity<?> addLike(@PathVariable Long postId,
-									 @CurrentMember MemberDto memberDto) throws IllegalAccessException {
+									 @CurrentMember MemberDto memberDto){
 		return ResponseEntity.ok(likeService.addLike(postId,memberDto));
 	}
 
+	// 좋아요 취소
 	@DeleteMapping("/post/{postId}/like")
 	public ResponseEntity<?> delete(@PathVariable Long postId,
 									@CurrentMember MemberDto memberDto) {
 		return ResponseEntity.ok(likeService.deleteLike(postId,memberDto));
-	}
-
-	@GetMapping("/post/{postId}/total/like")
-	public ResponseEntity<?> getPostTotalLike(@PathVariable Long postId){
-		return ResponseEntity.ok(likeService.getPostTotalLike(postId));
 	}
 
 

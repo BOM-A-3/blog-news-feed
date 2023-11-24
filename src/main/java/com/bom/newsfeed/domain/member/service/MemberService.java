@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bom.newsfeed.domain.member.dto.MemberDto;
 import com.bom.newsfeed.domain.member.dto.request.SignupRequest;
 import com.bom.newsfeed.domain.member.dto.request.UpdateProfileRequest;
+import com.bom.newsfeed.domain.member.dto.response.SearchProfileResponse;
+import com.bom.newsfeed.domain.member.dto.response.SignupResponse;
 import com.bom.newsfeed.domain.member.dto.response.UpdateProfileResponse;
 import com.bom.newsfeed.domain.member.entity.Member;
 import com.bom.newsfeed.domain.member.repository.MemberRepository;
@@ -29,14 +31,16 @@ public class MemberService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	public void signup(SignupRequest request) {
+	public SignupResponse signup(SignupRequest request) {
 		if (memberRepository.existsByUsername(request.getUsername())) {
 			throw new AlreadyExistMemberException();
 		}
 
 		verifyNickname(request.getNickname());
 
-		memberRepository.save(request.toEntity(passwordEncoder));
+		Member member = memberRepository.save(request.toEntity(passwordEncoder));
+
+		return SignupResponse.from(member);
 	}
 
 	public void verifyNickname(String nickname) {
@@ -77,5 +81,12 @@ public class MemberService {
 		if (memberRepository.existsByUsername(username)) {
 			throw new AlreadyExistMemberException();
 		}
+	}
+
+	public SearchProfileResponse getProfile(Long memberId) {
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(MemberNotFoundException::new);
+
+		return SearchProfileResponse.from(member);
 	}
 }

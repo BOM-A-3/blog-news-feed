@@ -27,9 +27,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "회원 API", description = "회원 API")
-@RequestMapping("/api/members")
+@RequestMapping("/api/member")
 @RestController
 public class MemberController {
 	public final MemberService memberService;
@@ -52,7 +53,7 @@ public class MemberController {
 		)
 	})
 	@PostMapping("/signup")
-	public ResponseEntity<SuccessResponse<Object>> signup(@RequestBody SignupRequest request) {
+	public ResponseEntity<SuccessResponse<Object>> signup(@Valid @RequestBody SignupRequest request) {
 		return ResponseEntity.status(SIGNUP_MEMBER.getHttpStatus().value()).body(
 			SuccessResponse.builder()
 				.responseCode(SIGNUP_MEMBER)

@@ -27,7 +27,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "댓글 API", description = "댓글 API")
 @RestController
-@RequestMapping("/api/posts/{postId}/comments")
+@RequestMapping("/api/post/{postId}/comment")
 public class CommentController {
 	private final CommentService commentService;
 	public CommentController(CommentService commentService) {

@@ -2,6 +2,8 @@ package com.bom.newsfeed.domain.category.constant;
 
 import java.util.Arrays;
 
+import org.springframework.util.StringUtils;
+
 public enum CategoryType {
 	LIFE("일상"),
 	IT("IT"),
@@ -31,6 +33,10 @@ public enum CategoryType {
 
 
 	public static CategoryType findByName(String categoryType) {
+		if (!StringUtils.hasText(categoryType)) {
+			return null;
+		}
+
 		return Arrays.stream(CategoryType.values())
 			.filter(type ->
 				type.name().equals(categoryType.toUpperCase()))

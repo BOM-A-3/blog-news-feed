@@ -48,13 +48,13 @@ public class SignupRequest {
 		example = "봄봄봄"
 	)
 	@Pattern(
-		regexp = "[a-zA-Z0-9_]+",
-		message = "특수문자 _ 와 영어 대소문자 및 숫자만 입력가능합니다."
+		regexp = "[a-zA-Z0-9가-힣_]+",
+		message = "특수문자 _ 와 한글, 영어 대소문자 및 숫자만 입력가능합니다."
 	)
 	@Size(
-		min = 4,
+		min = 3,
 		max = 30,
-		message = "최소 4자 이상 최대 30자 이하로만 입력가능합니다."
+		message = "최소 3자 이상 최대 30자 이하로만 입력가능합니다."
 	)
 	@NotBlank(message = "닉네임을 입력해주세요.")
 	private final String nickname;

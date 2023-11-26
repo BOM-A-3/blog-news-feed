@@ -59,7 +59,6 @@ public class Post extends BaseEntity {
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Likes> likes = new ArrayList<>();
 
-
 	// 카테고리 정보
 	@ManyToOne
 	@JoinColumn(name = "category_id")
@@ -77,14 +76,19 @@ public class Post extends BaseEntity {
 		this.title = requestDto.getTitle();
 		this.content = requestDto.getContent();
 		this.category = category;
+
+	}
+	public void addPostFile(List<PostFile> postFiles) {
+		// 포스트 설정
+		for (PostFile postfile: postFiles) {
+			postfile.setPost(this);
+		}
+		this.postFiles.addAll(postFiles);
+
 	}
 
-	public void addComment(Comment comment) {
-		comment.initPost(this);
-		this.comments.add(comment);
+	public void removePostFile(List<PostFile> removePostFiles){
+		this.postFiles.removeAll(removePostFiles);
 	}
-
-
-
 
 }

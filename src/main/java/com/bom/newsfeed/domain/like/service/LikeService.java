@@ -27,7 +27,7 @@ public class LikeService {
 	}
 
 	@Transactional
-	public String addLike(Long postId, MemberDto memberDto) throws ApiException {
+	public void addLike(Long postId, MemberDto memberDto) throws ApiException {
 
 		Post post = postService.findPost(postId);
 
@@ -36,31 +36,29 @@ public class LikeService {
 
 		// 좋아요 정보를 추가하기 전에 전에 눌렀던 적이 있는지 체크
 		Likes like = likeRepository.findByPostIdAndMemberId(postId, memberDto.getId());
-		if(like == null) {
-			like = new Likes(post, memberDto.toEntity());
-		}
-		else{
+		if(like != null) {
 			throw new AlreadyExistLikeException();
 		}
+		like = new Likes(post, memberDto.toEntity());
+
 
 		likeRepository.save(like);
-		return LIKE;
 	}
 
 	// 해당 post에 본인이 누른 좋아요를 취소할 때 post 좋아요에 본인이름이 있는지 체크
 	// 취소하는사람이 본인이 누른 좋아요 인지 체크
-	public String deleteLike(Long postId, MemberDto memberDto) {
+	public void deleteLike(Long postId, MemberDto memberDto) {
 		// 선택한 게시글과 본인이 누른 좋아요가 있는지 체크
 		Likes like = likeRepository.findByPostIdAndMemberId(postId, memberDto.getId());
 		// 없으면 예외처리
-		if(like == null) {
-			throw new NotFoundInfoException();
+		if(like != null) {
+			likeRepository.delete(like);
 		}
 		else {
-			likeRepository.delete(like);
-			return DELETE_LIKE;
+			throw new NotFoundInfoException();
 		}
 	}
+
 
 
 }

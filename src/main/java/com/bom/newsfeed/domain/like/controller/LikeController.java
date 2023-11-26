@@ -44,14 +44,13 @@ public class LikeController {
 		)
 	})
 	@PostMapping("/post/{postId}/like")
-	public ResponseEntity<SuccessResponse<Object>> addLike(@PathVariable Long postId,
+	public ResponseEntity<Object> addLike(@PathVariable Long postId,
 														   @CurrentMember MemberDto memberDto) {
-		return ResponseEntity.status(ADD_LIKE.getHttpStatus().value()).body(
-			SuccessResponse.builder()
-				.responseCode(ADD_LIKE)
-				.data(likeService.addLike(postId, memberDto))
-				.build()
-		);
+		likeService.addLike(postId, memberDto);
+		return ResponseEntity.ok(SuccessResponse.builder()
+			.responseCode(ADD_LIKE)
+			.build());
+
 	}
 
 	@Operation(summary = "좋아요 취소", description = "좋아요 취소 API")
@@ -68,13 +67,13 @@ public class LikeController {
 		)
 	})
 	@DeleteMapping("/post/{postId}/like")
-	public ResponseEntity<SuccessResponse<Object>> deleteLike(@PathVariable Long postId,
+	public ResponseEntity<Object> deleteLike(@PathVariable Long postId,
 															  @CurrentMember MemberDto memberDto) {
-		return ResponseEntity.status(DELETE_LIKE.getHttpStatus().value()).body(
-			SuccessResponse.builder()
-				.responseCode(DELETE_LIKE)
-				.data(likeService.deleteLike(postId, memberDto))
-				.build()
-		);
+
+		likeService.deleteLike(postId, memberDto);
+		return ResponseEntity.ok(SuccessResponse.builder()
+			.responseCode(DELETE_LIKE)
+			.build());
+
 	}
 }

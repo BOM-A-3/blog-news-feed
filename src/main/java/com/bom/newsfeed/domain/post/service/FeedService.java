@@ -96,6 +96,6 @@ public class FeedService {
 	private int compareLikeCount(Post o1, Post o2) {
 		Long o1LikeCount = (long)o1.getLikes().size();
 		Long o2LikeCount = (long)o2.getLikes().size();
-		return o1LikeCount.compareTo(o2LikeCount);
+		return o2LikeCount.compareTo(o1LikeCount);
 	}
 }

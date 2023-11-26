@@ -54,6 +54,7 @@ public class SecurityConfig {
 			authorizeHttpRequests
 				.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
 				.requestMatchers(HttpMethod.GET, "/api/post/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/member/*/verify").permitAll()
 				.requestMatchers(WHITE_LIST_URL).permitAll()
 				.anyRequest().authenticated() // 그 외 모든 요청 인증처리
 		);
@@ -103,6 +104,7 @@ public class SecurityConfig {
 	private static final String[] WHITE_LIST_URL = {
 		"/api/auth/**",
 		"/api/member/signup",
+		"/api/feed",
 
 		//swagger
 		"/v1/api-docs/**",

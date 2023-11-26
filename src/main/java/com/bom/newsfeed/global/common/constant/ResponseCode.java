@@ -15,6 +15,7 @@ public enum ResponseCode {
     VERIFY_NICKNAME(OK, "사용가능한 닉네임입니다."),
     VERIFY_USERNAME(OK, "사용가능한 아이디입니다."),
     UPDATE_PROFILE(OK, "프로필 수정 완료."),
+    GET_PROFILE(OK,"프로필 조회 완료"),
     /*게시물 응답*/
     GET_FEED(OK,"피드 조회 완료"),
     CREATE_POST(OK, "포스트 생성 완료"),

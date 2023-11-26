@@ -48,6 +48,7 @@ public class PostService {
 		}
 		Post post = new Post(postRequestDto, member.toEntity(), category); // 포스트 객체 정보 입력
 
+
 		if(files != null) {
 			post = postFileService.createFile(files, post); // 입력받은 파일들을 저장
 		}

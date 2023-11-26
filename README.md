@@ -55,7 +55,8 @@
 ---
 ## ✅ API 명세
 Notion 링크: https://www.notion.so/a7a91638e92b416bb7ad316e63c3fa1c?v=9ceb7b5e3b644aac867e015c366b536a
-Swagger 링크: http://ec2-15-164-129-207.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html#/
+
+Swagger 링크: http://ec2-15-164-129-207.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html#
 
 ![image](https://github.com/BOM-A-3/blog-news-feed/assets/73427028/e449460f-859e-453f-8e83-03b9301d8031)
 

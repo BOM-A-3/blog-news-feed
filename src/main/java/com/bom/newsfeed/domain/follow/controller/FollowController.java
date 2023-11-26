@@ -65,13 +65,13 @@ public class FollowController {
 		)
 	})
 	//팔로우 등록
-	@PostMapping("/{followingId}")
+	@PostMapping("/{followerId}")
 	public ResponseEntity<SuccessResponse> follow(
-		@Parameter(name = "followingId", description = "팔로우 할 회원 ID", in = ParameterIn.PATH)
-		@PathVariable(name = "followingId") Long followingId,
-		@CurrentMember MemberDto memberDto
+		@Parameter(name = "followerId", description = "팔로우 할 회원 ID", in = ParameterIn.PATH)
+		@PathVariable(name = "followerId") Long followerId,
+		@CurrentMember MemberDto following
 	) {
-		followService.follow(followingId, memberDto);
+		followService.follow(followerId, following);
 		return ResponseEntity.ok(
 			SuccessResponse.builder()
 				.responseCode(ADD_FOLLOW)
@@ -104,10 +104,10 @@ public class FollowController {
 	@DeleteMapping("/{followingId}")
 	public ResponseEntity<SuccessResponse> unFollow(
 		@Parameter(name = "followingId", description = "팔로우 할 회원 ID", in = ParameterIn.PATH)
-		@PathVariable(name = "followingId") Long followingId,
-		@CurrentMember MemberDto memberDto
+		@PathVariable(name = "followingId") Long followerId,
+		@CurrentMember MemberDto following
 	) {
-		followService.unFollow(followingId, memberDto);
+		followService.unFollow(followerId, following);
 		return ResponseEntity.ok(
 			SuccessResponse.builder()
 				.responseCode(DELETE_FOLLOW)

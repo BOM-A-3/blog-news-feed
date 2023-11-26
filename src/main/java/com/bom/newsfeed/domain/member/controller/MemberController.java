@@ -153,12 +153,12 @@ public class MemberController {
 		),
 		@ApiResponse(
 			responseCode = "404",
-			description = "수정할 회원이 없는 경우",
+			description = "조회할 회원이 없는 경우",
 			content = @Content(schema = @Schema(implementation = ErrorResponse.class))
 		),
 		@ApiResponse(
 			responseCode = "403",
-			description = "프로필 정보에 대해 수정 권한이 없는 경우",
+			description = "프로필 정보에 대해 조회 권한이 없는 경우",
 			content = @Content(schema = @Schema(implementation = ErrorResponse.class))
 		)
 	})
@@ -168,7 +168,7 @@ public class MemberController {
 		@PathVariable("memberId") Long memberId
 	) {
 		return ResponseEntity.ok(SuccessResponse.builder()
-			.responseCode(UPDATE_PROFILE)
+			.responseCode(GET_PROFILE)
 			.data(memberService.getProfile(memberId))
 			.build()
 		);

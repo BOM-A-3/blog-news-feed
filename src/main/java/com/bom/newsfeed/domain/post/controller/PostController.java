@@ -4,6 +4,7 @@ import static com.bom.newsfeed.global.common.constant.ResponseCode.*;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,6 +30,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @RequestMapping("/api")
@@ -58,7 +60,7 @@ public class PostController {
 		)
 	})
 	@PostMapping(path = "/post", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<SuccessResponse<Object>> createPost(@RequestPart(value = "postRequestDto") PostRequestDto postRequestDto,
+	public ResponseEntity<SuccessResponse<Object>> createPost(@Valid @RequestPart(value = "postRequestDto") PostRequestDto postRequestDto,
 										@RequestPart(required = false) List<MultipartFile> files,
 										@CurrentMember MemberDto memberDto){
 
@@ -141,7 +143,7 @@ public class PostController {
 	})
 	@PutMapping(path = "/post/{id}",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<SuccessResponse<Object>> updatePost(@PathVariable Long id,
-										@RequestPart(value = "postUpdateRequestDto") PostUpdateRequestDto postUpdateRequestDto,
+										@Valid @RequestPart(value = "postUpdateRequestDto") PostUpdateRequestDto postUpdateRequestDto,
 										@RequestPart(required = false)  List<MultipartFile> updateFile,
 										@CurrentMember MemberDto memberDto) throws Exception{
 		return ResponseEntity.status(POST_UPDATE.getHttpStatus().value()).body(

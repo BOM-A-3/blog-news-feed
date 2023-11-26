@@ -28,7 +28,7 @@ public enum CategoryType {
 		return Arrays.stream(CategoryType.values())
 			.filter(type ->
 				type.ko.equals(categoryType)).findFirst()
-			.orElse(CategoryType.ETC);
+			.orElse(null);
 	}
 
 

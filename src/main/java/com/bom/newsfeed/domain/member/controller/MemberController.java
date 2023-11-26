@@ -102,13 +102,14 @@ public class MemberController {
 		)
 	})
 	@GetMapping("/username/verify")
-	public ResponseEntity<Object> verifyUsername(
+	public ResponseEntity<SuccessResponse<Object>> verifyUsername(
 		@Parameter(name = "username", description = "아이디")
 		@RequestParam("username") String username
 	) {
 		memberService.verifyUsername(username);
 		return ResponseEntity.ok(SuccessResponse.builder()
 			.responseCode(VERIFY_NICKNAME)
+			.build()
 		);
 	}
 
@@ -163,7 +164,7 @@ public class MemberController {
 		)
 	})
 	@GetMapping("/{memberId}")
-	public ResponseEntity<SuccessResponse> getProfile(
+	public ResponseEntity<SuccessResponse<Object>> getProfile(
 		@Parameter(name = "memberId", description = "회원 ID")
 		@PathVariable("memberId") Long memberId
 	) {

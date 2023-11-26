@@ -31,7 +31,10 @@ public enum ResponseCode {
     DELETE_FILE(OK,"파일 삭제 완료"),
     /*좋아요 응답*/
     ADD_LIKE(CREATED, "좋아요 등록"),
-    DELETE_LIKE(NO_CONTENT, "좋아요 취소");
+    DELETE_LIKE(NO_CONTENT, "좋아요 취소"),
+    /*팔로우 응답*/
+    ADD_FOLLOW(CREATED, "팔로우 등록"),
+    DELETE_FOLLOW(CREATED, "팔로우 취소");
 
     private final HttpStatus httpStatus;
     private final String detail;

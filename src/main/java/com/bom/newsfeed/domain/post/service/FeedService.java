@@ -14,7 +14,7 @@ import com.bom.newsfeed.domain.member.dto.MemberDto;
 import com.bom.newsfeed.domain.member.entity.Member;
 import com.bom.newsfeed.domain.member.repository.MemberRepository;
 import com.bom.newsfeed.domain.post.dto.FeedResponse;
-import com.bom.newsfeed.domain.post.dto.GetPostAllResponseDto;
+import com.bom.newsfeed.domain.post.dto.GetAllPostResponseDto;
 import com.bom.newsfeed.domain.post.dto.SearchFeedCondition;
 import com.bom.newsfeed.domain.post.entity.Post;
 import com.bom.newsfeed.domain.post.repository.FeedRepository;
@@ -58,7 +58,7 @@ public class FeedService {
 		Long lastCursorId = posts.getLast().getId();
 
 		List<Post> feeds = rankProcess(posts, member);
-		List<GetPostAllResponseDto> feedResponses = feeds.stream().map(GetPostAllResponseDto::new)
+		List<GetAllPostResponseDto> feedResponses = feeds.stream().map(GetAllPostResponseDto::new)
 				.toList();
 
 		return FeedResponse.from(feedResponses, lastCursorId);

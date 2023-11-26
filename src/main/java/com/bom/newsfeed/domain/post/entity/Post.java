@@ -2,6 +2,7 @@ package com.bom.newsfeed.domain.post.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.bom.newsfeed.domain.category.entity.Category;
 import com.bom.newsfeed.domain.comment.entity.Comment;
@@ -11,6 +12,7 @@ import com.bom.newsfeed.domain.post.dto.PostRequestDto;
 import com.bom.newsfeed.domain.postfile.entity.PostFile;
 import com.bom.newsfeed.global.common.entity.BaseEntity;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,6 +26,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+
 
 @Entity
 @Setter
@@ -59,7 +63,6 @@ public class Post extends BaseEntity {
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Likes> likes = new ArrayList<>();
 
-
 	// 카테고리 정보
 	@ManyToOne
 	@JoinColumn(name = "category_id")
@@ -77,14 +80,32 @@ public class Post extends BaseEntity {
 		this.title = requestDto.getTitle();
 		this.content = requestDto.getContent();
 		this.category = category;
+
+	}
+	public void addPostFile(List<PostFile> postFiles) {
+		// 포스트 설정
+		for (PostFile postfile: postFiles) {
+			postfile.setPost(this);
+		}
+		this.postFiles.addAll(postFiles);
+
 	}
 
-	public void addComment(Comment comment) {
-		comment.initPost(this);
-		this.comments.add(comment);
+	public void removePostFile(List<PostFile> removePostFiles){
+		this.postFiles.removeAll(removePostFiles);
 	}
 
+	//Entity 간 동등성 id값 기준으로 재정의
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Post that)) return false;
+		return this.getId() != null && this.getId().equals(that.getId());
+	}
 
-
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.getId());
+	}
 
 }

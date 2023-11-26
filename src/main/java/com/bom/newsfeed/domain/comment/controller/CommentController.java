@@ -27,7 +27,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "댓글 API", description = "댓글 API")
 @RestController
-@RequestMapping("/api/posts/{postId}/comments")
+@RequestMapping("/api/post/{postId}/comment")
 public class CommentController {
 	private final CommentService commentService;
 	public CommentController(CommentService commentService) {
@@ -48,18 +48,15 @@ public class CommentController {
 		)
 	})
 	@PostMapping
-
-	public ResponseEntity<SuccessResponse<Object>> createComment(@PathVariable Long postId,
-																 @RequestBody CommentRequestDto commentRequestDto,
-																 @CurrentMember MemberDto memberDto) {
-		return ResponseEntity.status(CREATED_COMMENT.getHttpStatus().value()).body(
-			SuccessResponse.builder()
-				.responseCode(CREATED_COMMENT)
-				.data(commentService.createComment(postId, commentRequestDto, memberDto))
-				.build()
-		);
-}
-
+	public ResponseEntity<Object> createComment(@PathVariable Long postId,
+												@RequestBody CommentRequestDto commentRequestDto,
+												@CurrentMember MemberDto memberDto) {
+		commentService.createComment(postId, commentRequestDto, memberDto);
+		return ResponseEntity.ok(SuccessResponse.builder()
+			.responseCode(CREATED_COMMENT)
+			.build()
+			);
+	}
 
 	@Operation(summary = "댓글 수정", description = "댓글 수정 API")
 	@ApiResponses(value = {
@@ -80,16 +77,13 @@ public class CommentController {
 		)
 	})
 	@PutMapping("/{commentId}")
-
 	public ResponseEntity<SuccessResponse<Object>> updateComment(@PathVariable Long commentId,
 																 @RequestBody CommentRequestDto commentRequestDto,
 							  									 @CurrentMember MemberDto memberDto) {
-		return ResponseEntity.status(UPDATE_COMMENT.getHttpStatus().value()).body(
-			SuccessResponse.builder()
-				.responseCode(UPDATE_COMMENT)
-				.data(commentService.updateComment(commentId, commentRequestDto, memberDto))
-				.build()
-			);
+		commentService.updateComment(commentId, commentRequestDto, memberDto);
+		return ResponseEntity.ok(SuccessResponse.builder()
+			.responseCode(UPDATE_COMMENT)
+			.build());
 	}
 
 	@Operation(summary = "댓글 삭제", description = "댓글 삭제 API")
@@ -111,14 +105,11 @@ public class CommentController {
 		)
 	})
 	@DeleteMapping("/{commentId}")
-
 	public ResponseEntity<SuccessResponse<Object>> deleteComment(@PathVariable Long commentId,
 																 @CurrentMember MemberDto memberDto) {
-		return ResponseEntity.status(DELETE_COMMENT.getHttpStatus().value()).body(
-			SuccessResponse.builder()
-				.responseCode(DELETE_COMMENT)
-				.data(commentService.deleteComment(commentId, memberDto))
-				.build()
-		);
+		commentService.deleteComment(commentId,memberDto);
+		return ResponseEntity.ok(SuccessResponse.builder()
+			.responseCode(DELETE_COMMENT)
+			.build());
 	}
 }

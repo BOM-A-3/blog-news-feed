@@ -41,4 +41,5 @@ public class PostFile {
 		this.filetype = fileType;
 	}
 
+
 }

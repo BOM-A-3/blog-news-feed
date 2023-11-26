@@ -8,7 +8,7 @@ import com.bom.newsfeed.domain.post.entity.Post;
 import lombok.Getter;
 
 @Getter
-public class GetPostAllResponseDto {
+public class GetAllPostResponseDto {
 
 	private final Long id;
 
@@ -24,7 +24,7 @@ public class GetPostAllResponseDto {
 
 	private final long likes;
 
-	public GetPostAllResponseDto(Post post)
+	public GetAllPostResponseDto(Post post)
 	{
 		this.id = post.getId();
 		this.title = post.getTitle();

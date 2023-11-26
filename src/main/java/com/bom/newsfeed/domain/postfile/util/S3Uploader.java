@@ -17,6 +17,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,24 +35,22 @@ public class S3Uploader {
 	 */
 	public List<String> uploadFileToS3(List<MultipartFile>  multipartFile, String filePath) {
 		// MultipartFile -> File 로 변환
-		List<File> uploadFile = null;
+		List<File> uploadFileList = new ArrayList<>();
 		try {
 			for (MultipartFile file: multipartFile) {
-				uploadFile.add(convert(file).orElseThrow(()
+				uploadFileList.add(convert(file).orElseThrow(()
 					-> new IllegalArgumentException("[error]: MultipartFile -> 파일 변환 실패")));
+
 			}
-			// uploadFile = convert(multipartFile)
-			// 	.orElseThrow(() -> new IllegalArgumentException("[error]: MultipartFile -> 파일 변환 실패"));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 
-		// S3에 저장된 파일 이름
-		String fileName = filePath + "/" + UUID.randomUUID();
-
 		List<String> uploadImageUrl = new ArrayList<>();
 		// s3로 업로드 후 로컬 파일 삭제
-		for (File file: uploadFile) {
+		for (File file: uploadFileList) {
+			// S3에 저장된 파일 이름
+			String fileName = filePath + "/" + UUID.randomUUID();
 			uploadImageUrl.add(putS3(file, fileName));
 			removeNewFile(file);
 		}
@@ -78,11 +77,14 @@ public class S3Uploader {
 	 */
 	public void deleteS3(String filePath) throws Exception {
 		try{
-			String key = filePath.substring(56); // 폴더/파일.확장자
-
+			String key = filePath.substring(62); // 폴더/파일.확장자
+			// String key = filePath.substring(filePath.indexOf(
+			// )); // 폴더/파일.확장자
 			try {
 				amazonS3Client.deleteObject(bucket, key);
 			} catch (AmazonServiceException e) {
+
+				log.info("에러발생했다고==================================================================================");
 				log.info(e.getErrorMessage());
 			}
 

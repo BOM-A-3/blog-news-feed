@@ -41,4 +41,10 @@ public class PostFile {
 		this.filetype = fileType;
 	}
 
+	public void addPost(Post post) {
+		this.post = post;
+	}
+
+
+
 }

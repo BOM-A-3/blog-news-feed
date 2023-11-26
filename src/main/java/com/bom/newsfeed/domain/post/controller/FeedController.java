@@ -58,7 +58,7 @@ public class FeedController {
 		@RequestParam(value = "category", required = false) String category
 	) {
 
-		CategoryType categoryType = CategoryType.findByName(category);
+		CategoryType categoryType = CategoryType.getType(category);
 		SearchFeedCondition condition = SearchFeedCondition.of(size, categoryType);
 		return ResponseEntity.ok(
 			SuccessResponse.builder()

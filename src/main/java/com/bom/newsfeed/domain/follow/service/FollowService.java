@@ -38,7 +38,7 @@ public class FollowService {
 		}
 
 		//이미 팔로잉 했는지 확인
-		FollowPk id = FollowPk.of(following.getId(), followerId);
+		FollowPk id = FollowPk.of(followerId, following.getId());
 		if (followRepository.existsById(id)) {
 			throw new AlreadyExistFollowingException();
 		}
@@ -55,7 +55,7 @@ public class FollowService {
 		}
 
 		//Follow 찾기
-		FollowPk id = FollowPk.of(following.getId(), followerId);
+		FollowPk id = FollowPk.of(followerId, following.getId());
 		Follow follow = followRepository.findById(id)
 			.orElseThrow(FollowingNotFoundException::new);
 

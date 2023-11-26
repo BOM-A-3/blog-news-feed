@@ -28,6 +28,10 @@ public enum ResponseCode {
     DELETE_COMMENT(NO_CONTENT, "댓글 삭제 완료"),
     /*파일 응답*/
     DELETE_FILE(OK,"파일 삭제 완료");
+    /*좋아요 응답*/
+    ADD_LIKE(CREATED, "좋아요 등록"),
+    DELETE_LIKE(NO_CONTENT, "좋아요 취소");
+
     private final HttpStatus httpStatus;
     private final String detail;
 }

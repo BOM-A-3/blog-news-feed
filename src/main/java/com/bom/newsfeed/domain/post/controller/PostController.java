@@ -68,6 +68,7 @@ public class PostController {
 				 .data( postService.createPost(postRequestDto, memberDto, files))
 				 .build()
 			 );
+
 	}
 
 	@Operation(summary = "post 목록 조회" , description = "포스트 목록 조회 API")

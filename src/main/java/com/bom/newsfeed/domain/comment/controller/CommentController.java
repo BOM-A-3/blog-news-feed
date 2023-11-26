@@ -48,7 +48,6 @@ public class CommentController {
 		)
 	})
 	@PostMapping
-
 	public ResponseEntity<SuccessResponse<Object>> createComment(@PathVariable Long postId,
 																 @RequestBody CommentRequestDto commentRequestDto,
 																 @CurrentMember MemberDto memberDto) {
@@ -58,8 +57,7 @@ public class CommentController {
 				.data(commentService.createComment(postId, commentRequestDto, memberDto))
 				.build()
 		);
-}
-
+	}
 
 	@Operation(summary = "댓글 수정", description = "댓글 수정 API")
 	@ApiResponses(value = {
@@ -80,7 +78,6 @@ public class CommentController {
 		)
 	})
 	@PutMapping("/{commentId}")
-
 	public ResponseEntity<SuccessResponse<Object>> updateComment(@PathVariable Long commentId,
 																 @RequestBody CommentRequestDto commentRequestDto,
 							  									 @CurrentMember MemberDto memberDto) {
@@ -89,7 +86,7 @@ public class CommentController {
 				.responseCode(UPDATE_COMMENT)
 				.data(commentService.updateComment(commentId, commentRequestDto, memberDto))
 				.build()
-			);
+		);
 	}
 
 	@Operation(summary = "댓글 삭제", description = "댓글 삭제 API")
@@ -111,7 +108,6 @@ public class CommentController {
 		)
 	})
 	@DeleteMapping("/{commentId}")
-
 	public ResponseEntity<SuccessResponse<Object>> deleteComment(@PathVariable Long commentId,
 																 @CurrentMember MemberDto memberDto) {
 		return ResponseEntity.status(DELETE_COMMENT.getHttpStatus().value()).body(

@@ -20,7 +20,10 @@ public enum ResponseCode {
     /*댓글 응답*/
     CREATED_COMMENT(CREATED,"댓글 작성 완료"),
     UPDATE_COMMENT(OK,"댓글 수정 완료"),
-    DELETE_COMMENT(NO_CONTENT, "댓글 삭제 완료");
+    DELETE_COMMENT(NO_CONTENT, "댓글 삭제 완료"),
+    /*좋아요 응답*/
+    ADD_LIKE(CREATED, "좋아요 등록"),
+    DELETE_LIKE(NO_CONTENT, "좋아요 취소");
     private final HttpStatus httpStatus;
     private final String detail;
 }

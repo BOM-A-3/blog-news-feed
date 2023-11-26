@@ -59,9 +59,6 @@ public class PostService {
 			throw new ApiException(NOT_INFO_MESSAGE);
 		}
 
-
-
-
 	}
 
 	// 전체 조회

@@ -19,10 +19,7 @@ public class GetAllPostResponseDto {
 	private final String memberName;
 
 	private final List<GetPostFIleResponseDto> postFiles;
-
-	private final LocalDateTime createDateTime;
-
-	private final long likes;
+	private final LocalDateTime createdDateTime;
 
 	public GetAllPostResponseDto(Post post)
 	{
@@ -31,8 +28,6 @@ public class GetAllPostResponseDto {
 		this.content = post.getContent();
 		this.memberName = post.getMember().getNickname();
 		this.postFiles = post.getPostFiles().stream().map(GetPostFIleResponseDto::new).toList();
-		this.createDateTime = post.getCreatedDateTime();
-		this.likes = post.getLikes().size();
+		this.createdDateTime = post.getCreatedDateTime();
 	}
-
 }

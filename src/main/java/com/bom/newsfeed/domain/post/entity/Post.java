@@ -88,18 +88,7 @@ public class Post extends BaseEntity {
 	}
 
 	public void removePostFile(List<PostFile> removePostFiles){
-		// for (PostFile postFile: removePostFiles) {
-		// 	this.postFiles.remove(postFile);
-		// }
 		this.postFiles.removeAll(removePostFiles);
 	}
-
-
-	// public void addComment(Comment comment) {
-	// 	comment.initPost(this);
-	// 	this.comments.add(comment);
-	// }
-
-
 
 }

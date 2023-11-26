@@ -19,6 +19,6 @@ public enum FileType {
 		return Arrays.stream(values())
 			.filter(fileType -> fileType.extensions.contains(lowerExtension))
 			.findFirst()
-			.orElse(FILE); // 혹은 필요에 따라 예외를 던지는 것도 가능합니다
+			.orElse(FILE);
 	}
 }

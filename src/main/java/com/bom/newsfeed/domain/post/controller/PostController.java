@@ -30,9 +30,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-
+@Tag(name = "게시글 API", description = "게시글 API")
 @RequestMapping("/api")
 @RestController
 @Slf4j
@@ -145,7 +146,7 @@ public class PostController {
 	public ResponseEntity<SuccessResponse<Object>> updatePost(@PathVariable Long id,
 										@Valid @RequestPart(value = "postUpdateRequestDto") PostUpdateRequestDto postUpdateRequestDto,
 										@RequestPart(required = false)  List<MultipartFile> updateFile,
-										@CurrentMember MemberDto memberDto) throws Exception{
+										@CurrentMember MemberDto memberDto){
 		return ResponseEntity.status(POST_UPDATE.getHttpStatus().value()).body(
 			SuccessResponse.builder()
 				.responseCode(POST_UPDATE)

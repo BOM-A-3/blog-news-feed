@@ -10,7 +10,8 @@ spring:
     include:
       - properties
       - prod
-    default: prod
+      - local
+    default: local
 
 
 servlet:

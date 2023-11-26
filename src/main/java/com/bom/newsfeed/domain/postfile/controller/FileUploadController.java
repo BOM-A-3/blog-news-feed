@@ -1,5 +1,7 @@
 package com.bom.newsfeed.domain.postfile.controller;
 
+import static com.bom.newsfeed.global.common.constant.ResponseCode.*;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,8 +20,15 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.bom.newsfeed.domain.member.dto.MemberDto;
 import com.bom.newsfeed.domain.postfile.service.PostFileService;
 import com.bom.newsfeed.global.annotation.CurrentMember;
+import com.bom.newsfeed.global.common.dto.ErrorResponse;
+import com.bom.newsfeed.global.common.dto.SuccessResponse;
 import com.bom.newsfeed.global.exception.ApiException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -27,54 +36,28 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FileUploadController {
 
-	private final AmazonS3Client amazonS3Client;
-
-	// @Value("${cloud.aws.s3.bucket}")
-	// private String bucket;
-	//
-	// @PostMapping("/upload")
-	// public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFilefile) {
-	// 	try {
-	// 		StringfileName=file.getOriginalFilename();
-	// 		StringfileUrl= "https://" + bucket + "/test" +fileName;
-	// 		ObjectMetadatametadata= new ObjectMetadata();
-	// 		metadata.setContentType(file.getContentType());
-	// 		metadata.setContentLength(file.getSize());
-	// 		amazonS3Client.putObject(bucket,fileName,file.getInputStream(),metadata);
-	// 		return ResponseEntity.ok(fileUrl);
-	// 	} catch (IOExceptione) {
-	// 		e.printStackTrace();
-	// 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-	// 	}
-	// }
-
-	// Controller.java
-
 	private final PostFileService postFileService;
-	// /**
-	//  * 그룹(팀) 생성
-	//  * @param name
-	//  * @param file
-	//  * @return
-	//  */
-	// @PostMapping(path = "/file", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-	// public ResponseEntity createFile(@RequestPart(value = "name") String name,
-	// 								 @RequestPart(value = "file", required = false) MultipartFile file
-	// ){
-	// 	// postFileService.createFile(name, file);
-	// 	return new ResponseEntity(null, HttpStatus.OK);
-	// }
 
+
+	@Operation(summary = "파일 삭제", description = "파일 삭제 API")
+	@ApiResponses(value = {
+		@ApiResponse(
+			responseCode = "200",
+			description = "파일 삭제 완료",
+			content = @Content(schema = @Schema(implementation = SuccessResponse.class))
+		),
+		@ApiResponse(
+			responseCode = "404",
+			description = "삭제 요청한 파일이 없을때",
+			content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+		)
+	})
 	@DeleteMapping("/post/{postId}/file/{fileId}")
-	public ResponseEntity<?> deleteFile(@PathVariable Long postId,
+	public ResponseEntity<SuccessResponse<Object>> deleteFile(@PathVariable Long postId,
 										@PathVariable Long fileId,
-										@CurrentMember MemberDto memberDto) throws Exception {
+										@CurrentMember MemberDto memberDto)  {
 		postFileService.deleteFile(postId,fileId,memberDto);
-		return  ResponseEntity.ok("삭제 완료");
+		return  ResponseEntity.ok(SuccessResponse.builder().responseCode(DELETE_FILE).build());
 	}
-
-
-
-
 
 }

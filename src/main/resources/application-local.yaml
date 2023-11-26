@@ -1,4 +1,4 @@
-#  application-local.yaml#로컬 개발 설정은 여기서
+#로컬 개발 설정은 여기서
 logging:
   level:
     com.bom.newsfeed: debug
@@ -16,10 +16,11 @@ spring:
       on-profile: local
 
   datasource:
-    url: jdbc:mysql://localhost:3306/blognewsfeed
+    url: jdbc:mysql://localhost:3306/newsfeed
     username: root
-    password: 0807
+    password: "*STARrootroot"
     driver-class-name: com.mysql.cj.jdbc.Driver
+
 
   jpa:
     open-in-view: false

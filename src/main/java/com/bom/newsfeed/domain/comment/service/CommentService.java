@@ -23,31 +23,28 @@ public class CommentService {
 	private final PostRepository postRepository;
 
 	@Transactional
-	public Object createComment(Long postId, CommentRequestDto commentRequestDto, MemberDto memberDto) {
+	public void createComment(Long postId, CommentRequestDto commentRequestDto, MemberDto memberDto) {
 		Member member = memberDto.toEntity();
 		Comment comment = new Comment(commentRequestDto, member);
 		Post post = findPost(postId);
 		comment.initPost(post);
 		commentRepository.save(comment);
-		return null;
 	}
 
 	@Transactional
-	public Object updateComment(Long commentId, CommentRequestDto commentRequestDto, MemberDto memberDto) {
+	public void updateComment(Long commentId, CommentRequestDto commentRequestDto, MemberDto memberDto) {
 		Member member = memberDto.toEntity();
 		Comment comment = findComment(commentId);
 		checkUsername(comment, member);
 		comment.update(commentRequestDto);
-		return null;
 	}
 
 	@Transactional
-	public Object deleteComment(Long commentId, MemberDto memberDto) {
+	public void deleteComment(Long commentId, MemberDto memberDto) {
 		Member member = memberDto.toEntity();
 		Comment comment = findComment(commentId);
 		checkUsername(comment, member);
 		commentRepository.delete(comment);
-		return null;
 	}
 
 	public Post findPost(Long postId) {

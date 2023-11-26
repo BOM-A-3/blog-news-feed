@@ -1,6 +1,6 @@
 # deploy.sh
 #!/bin/bash
-REPOSITORY=/home/ec2-user/app/blog-news-feed
+REPOSITORY=/home/ubuntu/app/blog-news-feed
 cd $REPOSITORY
 
 APP_NAME=BlogNewsFeedApp

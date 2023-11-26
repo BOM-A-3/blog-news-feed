@@ -33,6 +33,7 @@ public class PostFileService {
 	public Post createFile(List<MultipartFile> files, Post post) {
 		List<String> extension = inputFileExtension(files);
 		List<String> urlList = new ArrayList<>();
+
 		if (!files.isEmpty()){
 			urlList = s3Uploader.uploadFileToS3(files, FILE_PATH);
 		}
@@ -134,7 +135,6 @@ public class PostFileService {
 		if(postFile == null){
 			throw new NotFoundFileException();
 		}
-
 	}
 
 

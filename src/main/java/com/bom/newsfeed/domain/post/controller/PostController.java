@@ -41,7 +41,7 @@ public class PostController {
 	// 게시글 생성
 	@PostMapping(path = "/post", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<?> createPost(@CurrentMember MemberDto memberDto,
-										@RequestPart PostRequestDto postRequestDto, @RequestPart List<MultipartFile> files){
+										@RequestPart(value = "postRequestDto") PostRequestDto postRequestDto, @RequestPart(required = false) List<MultipartFile> files){
 
 		return ResponseEntity.ok(postService.createPost(postRequestDto, memberDto, files));
 	}

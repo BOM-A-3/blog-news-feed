@@ -1,6 +1,5 @@
 package com.bom.newsfeed.domain.post.service;
 
-import static com.bom.newsfeed.global.common.constant.ErrorCode.*;
 import static com.bom.newsfeed.global.util.MemberUtil.*;
 
 import java.util.List;
@@ -21,7 +20,6 @@ import com.bom.newsfeed.domain.post.dto.SelectPostResponseDto;
 import com.bom.newsfeed.domain.post.entity.Post;
 import com.bom.newsfeed.domain.post.repository.PostRepository;
 import com.bom.newsfeed.domain.postfile.service.PostFileService;
-import com.bom.newsfeed.global.exception.ApiException;
 import com.bom.newsfeed.global.exception.NotFoundInfoException;
 
 @Service
@@ -48,23 +46,20 @@ public class PostService {
 			category  = new Category(CategoryType.getType(postRequestDto.getCategory()));
 			categoryRepository.save(category);
 		}
+		Post post = new Post(postRequestDto, member.toEntity(), category); // 포스트 객체 정보 입력
 
-		Post post = new Post(postRequestDto, member.toEntity(), category);
 		if(!files.isEmpty()) {
 			post = postFileService.createFile(files, post); // 입력받은 파일들을 저장
-			Post savePost = postRepository.save(post); // 포스트 저장
-			return new PostResponseDto(savePost);
-		}
-		else{
-			throw new ApiException(NOT_INFO_MESSAGE);
 		}
 
+		Post savePost = postRepository.save(post); // 포스트 저장
+		return new PostResponseDto(savePost);
 	}
 
 	// 전체 조회
 	@Transactional(readOnly = true)
 	public List<GetAllPostResponseDto> getAllPost() {
-		List<Post> postList = postRepository.findAllByOrderByCreatedDateTimeDesc();
+		List<Post> postList = postRepository.findAllByOrderByCreatedDateTimeDesc(); // post에 저장돼 있는 정보
 		if (postList.isEmpty()) {
 			throw new NotFoundInfoException();
 		}
@@ -85,27 +80,30 @@ public class PostService {
 	@Transactional
 	public PostResponseDto updatePost(Long postId, MemberDto member ,
 									  PostUpdateRequestDto postUpdateRequestDto,
-		 							  List<MultipartFile> updateFile) throws Exception{
+		 							  List<MultipartFile> updateFile){
 
 		Post post = findPost(postId);
+		matchedMember(post.getMember().getUsername(),member.getUsername()); // 유저 정보가 일치한지 확인
 
-		matchedMember(post.getMember().getUsername(),member.getUsername());
 		// 파일 업데이트
-		post = postFileService.updateFile(post, postUpdateRequestDto.getFileUrl());
-		post = postFileService.createFile(updateFile, post);
+		post = postFileService.updateFile(post, postUpdateRequestDto.getFileUrl()); //받은 URl 정보와 일치하지 않은 파일은 삭제
+		post = postFileService.createFile(updateFile, post); // 추가로 입력받은 파일 생성
 
-
+		// 카테고리 업데이트
 		Category category = categoryRepository.findByCategory(CategoryType.getType(postUpdateRequestDto.getCategory()));
 		if(category == null) {
 			category  = new Category(CategoryType.getType(postUpdateRequestDto.getCategory()));
 			categoryRepository.save(category);
 		}
+
 		PostRequestDto postRequestDto = new PostRequestDto(postUpdateRequestDto);
 		post.update(postRequestDto, category);
 
 		return new PostResponseDto(post);
 	}
 
+
+	// 게시글 삭제
 	@Transactional
 	public Long deletePost(Long id, MemberDto memberDto)
 	{
@@ -115,6 +113,7 @@ public class PostService {
 		return id;
 	}
 
+	// 게시글 탐색
 	public Post findPost(Long id){
 		return postRepository.findById(id).orElseThrow(NotFoundInfoException::new
 		);

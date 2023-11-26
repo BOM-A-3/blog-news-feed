@@ -19,6 +19,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.bom.newsfeed.global.exception.NotFoundFileException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -75,7 +76,7 @@ public class S3Uploader {
 	 * S3에 있는 파일 삭제
 	 * 영어 파일만 삭제 가능 -> 한글 이름 파일은 안됨
 	 */
-	public void deleteS3(String filePath) throws Exception {
+	public void deleteS3(String filePath) throws NotFoundFileException {
 		try{
 			String key = filePath.substring(62); // 폴더/파일.확장자
 			// String key = filePath.substring(filePath.indexOf(
@@ -83,12 +84,10 @@ public class S3Uploader {
 			try {
 				amazonS3Client.deleteObject(bucket, key);
 			} catch (AmazonServiceException e) {
-
-				log.info("에러발생했다고==================================================================================");
 				log.info(e.getErrorMessage());
 			}
 
-		} catch (Exception exception) {
+		} catch (NotFoundFileException exception) {
 			log.info(exception.getMessage());
 		}
 		log.info("[S3Uploader] : S3에 있는 파일 삭제");

@@ -15,6 +15,7 @@ import com.bom.newsfeed.domain.postfile.entity.FileType;
 import com.bom.newsfeed.domain.postfile.entity.PostFile;
 import com.bom.newsfeed.domain.postfile.repository.PostFileRepository;
 import com.bom.newsfeed.domain.postfile.util.S3Uploader;
+import com.bom.newsfeed.global.exception.NotFoundFileException;
 
 @Service
 public class PostFileService {
@@ -30,7 +31,6 @@ public class PostFileService {
 
 	@Transactional
 	public Post createFile(List<MultipartFile> files, Post post) {
-
 		List<String> extension = inputFileExtension(files);
 		List<String> urlList = new ArrayList<>();
 		if (!files.isEmpty()){
@@ -43,7 +43,7 @@ public class PostFileService {
 	}
 
 	@Transactional
-	public void deleteFile(Long postId, Long fileId, MemberDto memberDto) throws Exception{
+	public void deleteFile(Long postId, Long fileId, MemberDto memberDto) throws NotFoundFileException{
 		PostFile postFiles = postFileRepository.findPostFileByIdAndPost_Id(fileId, postId);
 		deletePostFileNullCheck(postFiles);
 
@@ -57,7 +57,7 @@ public class PostFileService {
 	}
 
 	@Transactional()
-	public Post updateFile(Post post, List<String> postUpdateFileList) throws Exception{
+	public Post updateFile(Post post, List<String> postUpdateFileList){
 		List<PostFile> postFileList = postFileRepository.findAllByPostId(post.getId());
 		List<PostFile> deleteFiles = deleteCheckFile(postFileList,postUpdateFileList);
 
@@ -66,7 +66,8 @@ public class PostFileService {
 		return post;
 	}
 
-	public void deleteListFile(List<PostFile> deleteFiles) throws Exception
+	// s3 파일 삭제
+	public void deleteListFile(List<PostFile> deleteFiles)
 	{
 		for (PostFile deleteFile: deleteFiles) {
 			s3Uploader.deleteS3(deleteFile.getUrl());
@@ -75,6 +76,7 @@ public class PostFileService {
 
 
 
+	// 업데이트할 파일과 기존에 있던 파일 비교후 삭제 목록 생성
 	public List<PostFile> deleteCheckFile( List<PostFile> postFileList, List<String>postUpdateFileList){
 		List<PostFile> deleteFileList = new ArrayList<>();
 		boolean flag;
@@ -127,16 +129,10 @@ public class PostFileService {
 		else return null;
 	}
 
-	public List<PostFile> addPostId(List<PostFile> postFiles, Post post){
-		for (PostFile postfile: postFiles) {
-			postfile.addPost(post);
-		}
-		return postFiles;
-	}
-
-	public void deletePostFileNullCheck(PostFile postFile) throws Exception{
+	// 파일이 있는지 체크
+	public void deletePostFileNullCheck(PostFile postFile) throws NotFoundFileException{
 		if(postFile == null){
-			throw new Exception("목록이 비어있습니다.");
+			throw new NotFoundFileException();
 		}
 
 	}

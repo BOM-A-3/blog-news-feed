@@ -1,9 +1,12 @@
 package com.bom.newsfeed.domain.post.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,9 +27,11 @@ import com.bom.newsfeed.global.exception.ApiException;
 import com.bom.newsfeed.global.exception.MemberNotFoundException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class FeedService {
 
 	private final FeedRepository feedRepository;
@@ -57,9 +62,10 @@ public class FeedService {
 		LinkedList<Post> posts = new LinkedList<>(result);
 		Long lastCursorId = posts.getLast().getId();
 
-		List<Post> feeds = rankProcess(posts, member);
-		List<GetAllPostResponseDto> feedResponses = feeds.stream().map(GetAllPostResponseDto::new)
-				.toList();
+		Set<Post> feeds = rankProcess(posts, member);
+		List<GetAllPostResponseDto> feedResponses = feeds.stream()
+			.map(GetAllPostResponseDto::new)
+			.toList();
 
 		return FeedResponse.from(feedResponses, lastCursorId);
 
@@ -70,27 +76,42 @@ public class FeedService {
 	//2. 좋아요 많은 순으로 정렬
 	//3. 리스트의 처음과 끝 id 사이 중(날짜로찾기) 친구글이 있는 경우 맨위로
 	// => 이경우 마지막 cursorId가 뭔지모름 -> response에서 따로 내려주기
-	public List<Post> rankProcess(List<Post> result, Optional<Member> member) {
-		LocalDateTime lastCursorCreatedDateTime = ((LinkedList<Post>) result).getLast().getCreatedDateTime();
+
+
+	public Set<Post> rankProcess(List<Post> result, Optional<Member> member) {
+		LocalDateTime lastCursorCreatedDateTime = ((LinkedList<Post>)result).getLast().getCreatedDateTime();
+		LinkedHashSet<Post> resultSet = new LinkedHashSet<>();
+
+		//좋아요 순 정렬
 		result.sort(this::compareLikeCount);
-		if (member.isPresent()) {
-			List<Follow> follows = followRepository.findFollowsByFollowingId(member.get().getId());
-			result.forEach(
-				post -> {
-					int idxCount = 0;
-					for (Follow follow : follows) {
-						//following 게시글중 최신글을 가장 앞에두기 위해 idx를 통해 넣는 곳 제어
-						List<Post> followingPost = postRepository.findAllByMember_IdAndCreatedDateTimeBefore(
-							follow.getFollowingId(), lastCursorCreatedDateTime);
-						if (post.equals(followingPost)) {
-							result.remove(post);
-							result.add(idxCount++, post);
-						}
-					}
-				});
+
+		//로그인 안한 경우
+		if (member.isEmpty()) {
+			resultSet.addAll(result);
+			return resultSet;
 		}
 
-		return result;
+		//로그인 한 경우
+		//팔로우 한 회원목록 가져오기
+		List<Follow> follows = followRepository.findAllByFollowingId(member.get().getId());
+		if (follows.isEmpty()) {
+			resultSet.addAll(result);
+			return resultSet;
+
+		}
+
+		//팔로우 한 회원의 게시글 add 먼저하기 -> Set 자료구조를 활용하여 중복 add 방지
+		for (Post post : result) {
+			for (Follow follow : follows) {
+				List<Post> followingPost =
+					postRepository.findAllByMember_IdAndCreatedDateTimeAfterOrderByCreatedDateTime(
+						follow.getFollowerId(), lastCursorCreatedDateTime);
+
+				resultSet.addAll(followingPost);
+				resultSet.add(post);
+			}
+		}
+		return resultSet;
 	}
 
 	private int compareLikeCount(Post o1, Post o2) {

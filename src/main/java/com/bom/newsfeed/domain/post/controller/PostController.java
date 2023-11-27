@@ -61,7 +61,7 @@ public class PostController {
 			content = @Content(schema = @Schema(implementation = ErrorResponse.class))
 		)
 	})
-	// @Parameter(name = "files", description = "업로드파일", content = @Content(mediaType = "multipart/form-data"))
+
 	@PostMapping(path = "/post", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE,MediaType.APPLICATION_OCTET_STREAM_VALUE})
 	public ResponseEntity<SuccessResponse<Object>> createPost(
 		@Parameter(name = "postRequestDto", description = "게시글 파라미터", content = @Content(mediaType = "application/json"))

@@ -8,6 +8,6 @@ import com.bom.newsfeed.domain.follow.entity.Follow;
 import com.bom.newsfeed.domain.follow.entity.FollowPk;
 
 public interface FollowRepository extends JpaRepository<Follow, FollowPk> {
-	List<Follow> findFollowsByFollowingId(Long followingId);
+	List<Follow> findAllByFollowingId(Long followerId);
 
 }

@@ -31,13 +31,12 @@ public class PostFileService {
 
 	@Transactional
 	public Post createFile(List<MultipartFile> files, Post post) {
-		List<String> extension = inputFileExtension(files);
 		List<String> urlList = new ArrayList<>();
 
 		if (!files.isEmpty()){
 			urlList = s3Uploader.uploadFileToS3(files, FILE_PATH);
 		}
-
+		List<String> extension = inputFileExtension(files);
 		List<FileType> fileTypes = inputFileType(extension);
 		post.addPostFile(inputPostFile(urlList, fileTypes)); // 입력받은 PostFile을 post에 저장
 		return post;

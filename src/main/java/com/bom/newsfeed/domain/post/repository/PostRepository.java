@@ -15,7 +15,7 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
 	List<Post> findAllByOrderByCreatedDateTimeDesc();
 
-	List<Post> findAllByMember_IdAndCreatedDateTimeBefore(Long memberId, LocalDateTime createdDateTime);
+	List<Post> findAllByMember_IdAndCreatedDateTimeAfterOrderByCreatedDateTime(Long memberId, LocalDateTime createdDateTime);
 
 	// Like findByLik
 

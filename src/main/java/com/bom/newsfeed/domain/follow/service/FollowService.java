@@ -26,19 +26,19 @@ public class FollowService {
 	}
 
 	@Transactional
-	public void follow(Long followingId, MemberDto follower) {
+	public void follow(Long followerId, MemberDto following) {
 		//팔로잉할 회원정보가 존재하는지 확인
-		if (!memberRepository.existsById(followingId)) {
+		if (!memberRepository.existsById(followerId)) {
 			throw new MemberNotFoundException();
 		}
 
 		//자기자신을 팔로우하는건지 확인
-		if(followingId.equals(follower.getId())) {
+		if(followerId.equals(following.getId())) {
 			throw new ApiException(INVALID_VALUE);
 		}
 
 		//이미 팔로잉 했는지 확인
-		FollowPk id = FollowPk.of(follower.getId(), followingId);
+		FollowPk id = FollowPk.of(followerId, following.getId());
 		if (followRepository.existsById(id)) {
 			throw new AlreadyExistFollowingException();
 		}
@@ -48,14 +48,14 @@ public class FollowService {
 	}
 
 	@Transactional
-	public void unFollow(Long followingId, MemberDto follower) {
+	public void unFollow(Long followerId, MemberDto following) {
 		//팔로잉 취소 할 회원정보가 존재하는지 확인
-		if (!memberRepository.existsById(followingId)) {
+		if (!memberRepository.existsById(followerId)) {
 			throw new MemberNotFoundException();
 		}
 
 		//Follow 찾기
-		FollowPk id = FollowPk.of(follower.getId(), followingId);
+		FollowPk id = FollowPk.of(followerId, following.getId());
 		Follow follow = followRepository.findById(id)
 			.orElseThrow(FollowingNotFoundException::new);
 

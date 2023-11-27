@@ -14,8 +14,10 @@ public class PostUpdateRequestDto {
 
 	private String content;
 
-	private List<String> fileUrl;
-
 	@NotBlank
 	private String category;
+
+	private List<String> fileUrl;
+
+
 }

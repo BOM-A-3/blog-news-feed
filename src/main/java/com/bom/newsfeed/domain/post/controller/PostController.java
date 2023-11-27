@@ -26,6 +26,7 @@ import com.bom.newsfeed.global.common.dto.ErrorResponse;
 import com.bom.newsfeed.global.common.dto.SuccessResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -60,10 +61,14 @@ public class PostController {
 			content = @Content(schema = @Schema(implementation = ErrorResponse.class))
 		)
 	})
-	@PostMapping(path = "/post", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<SuccessResponse<Object>> createPost(@Valid @RequestPart(value = "postRequestDto") PostRequestDto postRequestDto,
-										@RequestPart(required = false) List<MultipartFile> files,
-										@CurrentMember MemberDto memberDto){
+
+	@PostMapping(path = "/post", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE,MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	public ResponseEntity<SuccessResponse<Object>> createPost(
+		@Parameter(name = "postRequestDto", description = "게시글 파라미터", content = @Content(mediaType = "application/json"))
+		@Valid @RequestPart(value = "postRequestDto") PostRequestDto postRequestDto,
+		@Parameter(name = "files", description = "업로드파일", content = @Content(mediaType = "multipart/form-data"))
+		@RequestPart(required = false) List<MultipartFile> files,
+		@CurrentMember MemberDto memberDto){
 
 		 return ResponseEntity.status(CREATE_POST.getHttpStatus().value()).body(
 			 SuccessResponse.builder()
@@ -142,11 +147,13 @@ public class PostController {
 			content = @Content(schema = @Schema(implementation = ErrorResponse.class))
 		)
 	})
-	@PutMapping(path = "/post/{id}",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+	@PutMapping(path = "/post/{id}",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
 	public ResponseEntity<SuccessResponse<Object>> updatePost(@PathVariable Long id,
-										@Valid @RequestPart(value = "postUpdateRequestDto") PostUpdateRequestDto postUpdateRequestDto,
-										@RequestPart(required = false)  List<MultipartFile> updateFile,
-										@CurrentMember MemberDto memberDto){
+		@Parameter(name = "postRequestDto", description = "게시글 파라미터", content = @Content(mediaType = "application/json"))
+		@Valid @RequestPart(value = "postUpdateRequestDto") PostUpdateRequestDto postUpdateRequestDto,
+		@Parameter(name = "files", description = "업로드파일", content = @Content(mediaType = "multipart/form-data"))
+		@RequestPart(required = false)  List<MultipartFile> updateFile,
+		@CurrentMember MemberDto memberDto){
 		return ResponseEntity.status(POST_UPDATE.getHttpStatus().value()).body(
 			SuccessResponse.builder()
 				.responseCode(POST_UPDATE)

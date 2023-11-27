@@ -34,7 +34,7 @@
 #### ✅ 사용 기술 및 개발 환경
 
 - 개발 툴
-  > Inteelij, MySQL Workbench, Redis Insight
+  > Intellij, MySQL Workbench, Redis Insight
 - 환경
   > AWS EC2, RDS(MySQL/Aurora), S3, Code Deploy, Redis
 - 언어
